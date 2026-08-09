@@ -129,18 +129,20 @@ function HBar({ label, value, max, color }: { label: string; value: number; max:
   );
 }
 
-// ── Heatmap — tooltip as info bar (no fixed positioning) ──
-function Heatmap({ data, unit }: { data: DayCount[]; unit: string }) {
+// ── Heatmap with axis labels + info bar ──────────────────
+function Heatmap({ data, unit, weekLabels, monthNames }: {
+  data: DayCount[]; unit: string; weekLabels: string[]; monthNames: string[];
+}) {
   const countMap: Record<string, number> = {};
   data.forEach(d => { countMap[d.date] = d.count; });
   const max = Math.max(...Object.values(countMap), 1);
   const [info, setInfo] = useState('');
 
+  // Build week grid
   const weeks: { date: string; count: number }[][] = [];
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const start = new Date(today); start.setDate(start.getDate() - 23 * 7 + 1);
   while (start.getDay() !== 0) start.setDate(start.getDate() - 1);
-
   let week: { date: string; count: number }[] = [];
   for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
     const ds = d.toISOString().slice(0, 10);
@@ -148,6 +150,22 @@ function Heatmap({ data, unit }: { data: DayCount[]; unit: string }) {
     if (week.length === 7) { weeks.push(week); week = []; }
   }
   if (week.length) weeks.push(week);
+
+  // Detect month label positions (first week whose Sunday or any cell starts a new month)
+  const monthLabelCols: { label: string; col: number }[] = [];
+  let lastMonth = '';
+  weeks.forEach((wk, wi) => {
+    wk.forEach(cell => {
+      const m = cell.date.slice(0, 7);
+      if (m !== lastMonth) {
+        const mIdx = parseInt(cell.date.slice(5, 7)) - 1;
+        monthLabelCols.push({ label: monthNames[mIdx] ?? '', col: wi });
+        lastMonth = m;
+      }
+    });
+  });
+
+  const CELL = 11, GAP = 3, STRIDE = CELL + GAP;
 
   const getColor = (count: number) => {
     if (count === 0) return 'rgba(128,128,128,0.12)';
@@ -158,34 +176,65 @@ function Heatmap({ data, unit }: { data: DayCount[]; unit: string }) {
     return '#6366f1';
   };
 
+  // Which day-rows to label: Mon=1, Wed=3, Fri=5
+  const labelRows = new Set([1, 3, 5]);
+
   return (
     <div>
-      {/* scrollbar hidden via inline style + global style tag */}
       <style>{`.ws-hm::-webkit-scrollbar{display:none}`}</style>
-      <div class="ws-hm" style={{ overflowX: 'auto', overflowY: 'visible', scrollbarWidth: 'none' }}>
-        <div style={{ display: 'inline-flex', gap: '3px', minWidth: 'max-content' }}>
-          {weeks.map((wk, wi) => (
-            <div key={wi} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-              {wk.map((cell, di) => (
-                <div key={di}
-                  onMouseEnter={() => setInfo(cell.count > 0 ? `${cell.date} · ${cell.count} ${unit}` : cell.date)}
-                  onMouseLeave={() => setInfo('')}
-                  style={{
-                    width: '11px', height: '11px', borderRadius: '2px',
-                    background: getColor(cell.count),
-                    cursor: 'default',
-                    transition: 'opacity 0.1s',
-                  }}
-                />
+      <div class="ws-hm" style={{ overflowX: 'auto', scrollbarWidth: 'none' }}>
+        <div style={{ display: 'inline-flex', gap: '0', flexDirection: 'column', minWidth: 'max-content' }}>
+
+          {/* Month labels row */}
+          <div style={{ display: 'flex', marginLeft: '24px', height: '16px', position: 'relative', marginBottom: '2px' }}>
+            {monthLabelCols.map(({ label, col }) => (
+              <div key={col} style={{
+                position: 'absolute', left: `${col * STRIDE}px`,
+                fontSize: '10px', opacity: 0.45, fontWeight: 600, whiteSpace: 'nowrap',
+              }}>{label}</div>
+            ))}
+          </div>
+
+          {/* Grid: weekday labels + cells */}
+          <div style={{ display: 'flex', gap: '0' }}>
+            {/* Weekday label column */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: `${GAP}px`, marginRight: '6px', width: '18px' }}>
+              {weekLabels.map((label, i) => (
+                <div key={i} style={{
+                  height: `${CELL}px`, lineHeight: `${CELL}px`,
+                  fontSize: '9px', opacity: labelRows.has(i) ? 0.4 : 0,
+                  textAlign: 'right', fontWeight: 500,
+                }}>{label.slice(0, 3)}</div>
               ))}
             </div>
-          ))}
+
+            {/* Cell columns */}
+            <div style={{ display: 'flex', gap: `${GAP}px` }}>
+              {weeks.map((wk, wi) => (
+                <div key={wi} style={{ display: 'flex', flexDirection: 'column', gap: `${GAP}px` }}>
+                  {wk.map((cell, di) => (
+                    <div key={di}
+                      onMouseEnter={() => setInfo(cell.count > 0 ? `${cell.date} · ${cell.count} ${unit}` : cell.date)}
+                      onMouseLeave={() => setInfo('')}
+                      style={{
+                        width: `${CELL}px`, height: `${CELL}px`, borderRadius: '2px',
+                        background: getColor(cell.count),
+                        cursor: 'default',
+                      }}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      {/* info bar replaces floating tooltip */}
-      <div style={{ height: '16px', fontSize: '11px', opacity: info ? 0.55 : 0, color: 'inherit', marginTop: '5px', transition: 'opacity 0.15s' }}>
-        {info}
-      </div>
+
+      {/* Info bar */}
+      <div style={{
+        height: '16px', fontSize: '11px', marginTop: '6px',
+        opacity: info ? 0.5 : 0, transition: 'opacity 0.15s',
+      }}>{info}</div>
     </div>
   );
 }
@@ -201,6 +250,51 @@ function StatCard({ value, label, icon, accent }: { value: string | number; labe
       <span style={{ color: accent, opacity: 0.85 }}>{icon}</span>
       <span style={{ fontSize: '22px', fontWeight: 800, lineHeight: 1 }}>{value}</span>
       <span style={{ fontSize: '10px', opacity: 0.5, textAlign: 'center', fontWeight: 600 }}>{label}</span>
+    </div>
+  );
+}
+
+// ── Insights row ─────────────────────────────────────────
+function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
+  weeklyData: number[];
+  weekLabels: string[];
+  monthData: MonthData[];
+  totalNotes: number;
+  t: (k: keyof Locale) => string;
+}) {
+  const maxWd = Math.max(...weeklyData);
+  const mostActiveDay = maxWd > 0 ? weekLabels[weeklyData.indexOf(maxWd)] ?? '—' : '—';
+
+  const thisMonth = monthData[monthData.length - 1];
+  const lastMonth = monthData[monthData.length - 2];
+  const thisMonthNotes = thisMonth?.totalWords ?? 0;
+  const lastMonthNotes = lastMonth?.totalWords ?? 0;
+  const delta = lastMonthNotes > 0
+    ? Math.round(((thisMonthNotes - lastMonthNotes) / lastMonthNotes) * 100)
+    : null;
+
+  const avgChars = totalNotes > 0
+    ? Math.round(monthData.reduce((s, m) => s + m.totalWords, 0) / totalNotes)
+    : 0;
+
+  const chips: { icon: string; text: string }[] = [
+    { icon: '📅', text: `${t('mostActive')}: ${mostActiveDay}` },
+    { icon: '✍️', text: `${t('avgNote')}: ${fmtNum(avgChars)} ${t('chars')}` },
+    ...(delta !== null ? [{ icon: delta >= 0 ? '📈' : '📉', text: `${t('thisMonth')}: ${delta >= 0 ? '+' : ''}${delta}%` }] : []),
+  ];
+
+  return (
+    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '10px' }}>
+      {chips.map((c, i) => (
+        <div key={i} style={{
+          display: 'flex', alignItems: 'center', gap: '5px',
+          background: 'rgba(128,128,128,0.08)', border: '1px solid rgba(128,128,128,0.12)',
+          borderRadius: '20px', padding: '4px 10px', fontSize: '11px', opacity: 0.7,
+        }}>
+          <span style={{ fontSize: '12px' }}>{c.icon}</span>
+          <span>{c.text}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -241,6 +335,7 @@ export function App() {
   const locale: Locale = lang === 'zh' ? zh : en;
   const t = (key: keyof Locale) => locale[key];
   const weekLabels = t('weeks').split(',');
+  const monthNames = t('months').split(',');
 
   useEffect(() => {
     const api = window.Blinko.api.analytics as any;
@@ -348,7 +443,18 @@ export function App() {
           flex: 1, borderRadius: '12px', padding: '14px',
           background: 'rgba(128,128,128,0.05)', border: '1px solid rgba(128,128,128,0.1)',
         }}>
-          {tab === 'heatmap' && <Heatmap data={dailyData} unit={t('notes')} />}
+          {tab === 'heatmap' && (
+            <>
+              <Heatmap data={dailyData} unit={t('notes')} weekLabels={weekLabels} monthNames={monthNames} />
+              <InsightsRow
+                weeklyData={weeklyData}
+                weekLabels={weekLabels}
+                monthData={monthData}
+                totalNotes={totalNotes}
+                t={t}
+              />
+            </>
+          )}
 
           {tab === 'weekly' && (
             <VBar data={weeklyData} labels={weekLabels} color="#6366f1" unit={t('notes')} />
