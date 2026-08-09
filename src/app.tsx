@@ -578,9 +578,13 @@ export function App() {
     setDayNotes([]);
     setLoadingDay(true);
     try {
+      const token = (window.Blinko.store.userStore.userInfo as any)?.value?.token;
       const res = await fetch('/api/v1/note/list', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
         credentials: 'include',
         body: JSON.stringify({
           page: 1, size: 20, orderBy: 'asc',
