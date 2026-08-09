@@ -148,6 +148,7 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
 }) {
   const [month, day] = [parseInt(date.slice(5, 7)) - 1, date.slice(8, 10)];
   const label = `${monthNames[month]} ${day}`;
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   return (
     <div style={{
@@ -166,7 +167,7 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
       </div>
 
       {/* Body */}
-      <div style={{ maxHeight: '160px', overflowY: 'auto', scrollbarWidth: 'none' }}>
+      <div style={{ maxHeight: '220px', overflowY: 'auto', scrollbarWidth: 'none' }}>
         <style>{`.ws-np::-webkit-scrollbar{display:none}`}</style>
         <div class="ws-np">
           {loading && (
@@ -180,20 +181,62 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
             <div style={{ padding: '14px 12px', fontSize: '12px', opacity: 0.35 }}>—</div>
           )}
           {!loading && notes.map((note: any) => {
-            const preview = stripMd(note.content || '').slice(0, 100);
+            const full = stripMd(note.content || '');
+            const preview = full.slice(0, 100);
+            const isExpanded = expandedId === note.id;
             const time = note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
             return (
               <div key={note.id} style={{
-                padding: '8px 12px', borderBottom: '1px solid rgba(128,128,128,0.07)',
-                display: 'flex', gap: '8px', alignItems: 'flex-start',
+                borderBottom: '1px solid rgba(128,128,128,0.07)',
               }}>
-                <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', marginTop: '5px', flexShrink: 0, opacity: 0.6 }} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '12px', lineHeight: 1.5, opacity: 0.75, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {preview || '—'}
+                {/* Note row — click to expand/collapse */}
+                <div
+                  onClick={() => setExpandedId(isExpanded ? null : note.id)}
+                  style={{
+                    padding: '8px 12px', display: 'flex', gap: '8px', alignItems: 'flex-start',
+                    cursor: 'pointer',
+                    background: isExpanded ? 'rgba(99,102,241,0.06)' : 'transparent',
+                    transition: 'background 0.15s',
+                  }}
+                >
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', marginTop: '5px', flexShrink: 0, opacity: isExpanded ? 1 : 0.6 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '12px', lineHeight: 1.5, opacity: 0.75, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {preview || '—'}{!isExpanded && full.length > 100 && <span style={{ opacity: 0.4 }}> …</span>}
+                    </div>
                   </div>
+                  <span style={{ fontSize: '10px', opacity: 0.3, flexShrink: 0, marginTop: '2px' }}>{time}</span>
                 </div>
-                <span style={{ fontSize: '10px', opacity: 0.3, flexShrink: 0, marginTop: '2px' }}>{time}</span>
+
+                {/* Expanded content */}
+                {isExpanded && (
+                  <div style={{ padding: '0 12px 10px 25px', animation: 'ws-up 0.15s ease both' }}>
+                    <div style={{
+                      fontSize: '12px', lineHeight: 1.7, opacity: 0.7,
+                      whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                      maxHeight: '200px', overflowY: 'auto', scrollbarWidth: 'none',
+                      marginBottom: '8px',
+                    }}>
+                      {full || '—'}
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); window.open(`/detail?id=${note.id}`, '_self'); }}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        fontSize: '11px', color: '#6366f1', background: 'rgba(99,102,241,0.1)',
+                        border: '1px solid rgba(99,102,241,0.25)', borderRadius: '6px',
+                        padding: '3px 8px', cursor: 'pointer', fontWeight: 600,
+                        transition: 'background 0.15s',
+                      }}
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                      </svg>
+                      打开笔记
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
