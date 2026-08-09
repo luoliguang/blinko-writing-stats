@@ -267,6 +267,121 @@ function StatCard({ raw, label, icon, accent, fmt = fmtNum }: {
   );
 }
 
+// ── Line chart ───────────────────────────────────────────
+function smoothPath(pts: { x: number; y: number }[]) {
+  if (pts.length < 2) return pts.length === 1 ? `M ${pts[0]!.x} ${pts[0]!.y}` : '';
+  let d = `M ${pts[0]!.x} ${pts[0]!.y}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] ?? pts[i]!;
+    const p1 = pts[i]!;
+    const p2 = pts[i + 1]!;
+    const p3 = pts[i + 2] ?? pts[i + 1]!;
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+  }
+  return d;
+}
+
+function LineChart({ data, labels, color, unit }: {
+  data: number[]; labels: string[]; color: string; unit: string;
+}) {
+  const [hovered, setHovered] = useState<number | null>(null);
+  if (!data.length) return null;
+
+  const W = 400, H = 130;
+  const PAD = { top: 24, bottom: 28, left: 10, right: 10 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+  const max = Math.max(...data, 1);
+  const min = Math.min(...data.filter(v => v > 0), 0);
+  const range = max - min || 1;
+
+  const pts = data.map((v, i) => ({
+    x: PAD.left + (data.length === 1 ? cW / 2 : (i / (data.length - 1)) * cW),
+    y: PAD.top + (1 - (v - min) / range) * cH,
+    v,
+  }));
+
+  const line = smoothPath(pts);
+  const fill = pts.length >= 2
+    ? `${line} L ${pts.at(-1)!.x} ${PAD.top + cH} L ${pts[0]!.x} ${PAD.top + cH} Z`
+    : '';
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+      <defs>
+        <linearGradient id="ws-lg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+
+      {/* Grid lines */}
+      {[0.25, 0.5, 0.75, 1].map(r => (
+        <line key={r}
+          x1={PAD.left} y1={PAD.top + r * cH}
+          x2={W - PAD.right} y2={PAD.top + r * cH}
+          stroke="rgba(128,128,128,0.07)" strokeWidth="1"
+        />
+      ))}
+
+      {/* Fill */}
+      {fill && <path d={fill} fill="url(#ws-lg)" />}
+
+      {/* Line */}
+      <path d={line} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {pts.map((pt, i) => {
+        const isHov = hovered === i;
+        const tipW = 64, tipH = 20, tipX = Math.min(Math.max(pt.x - tipW / 2, PAD.left), W - PAD.right - tipW);
+        return (
+          <g key={i}>
+            {/* X label */}
+            <text x={pt.x} y={H - 6} textAnchor="middle" fontSize="9.5" fill="currentColor" opacity="0.38" fontWeight="500">
+              {labels[i]}
+            </text>
+
+            {/* Invisible hover target */}
+            <rect
+              x={pt.x - 14} y={PAD.top - 4} width="28" height={cH + 8}
+              fill="transparent"
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+            />
+
+            {/* Vertical guide on hover */}
+            {isHov && (
+              <line x1={pt.x} y1={PAD.top} x2={pt.x} y2={PAD.top + cH}
+                stroke={color} strokeWidth="1" strokeDasharray="3 3" opacity="0.35" />
+            )}
+
+            {/* Dot */}
+            <circle cx={pt.x} cy={pt.y} r={isHov ? 5.5 : 3.5}
+              fill={isHov ? color : 'white'} stroke={color} strokeWidth="2"
+              style={{ transition: 'r 0.12s' }} pointerEvents="none"
+            />
+
+            {/* Tooltip */}
+            {isHov && pt.v > 0 && (
+              <g pointerEvents="none">
+                <rect x={tipX} y={pt.y - 28} width={tipW} height={tipH} rx="6"
+                  fill="rgba(10,10,20,0.82)" />
+                <text x={tipX + tipW / 2} y={pt.y - 14} textAnchor="middle"
+                  fontSize="10.5" fill="white" fontWeight="600">
+                  {fmtNum(pt.v)} {unit}
+                </text>
+              </g>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 // ── Insights row ─────────────────────────────────────────
 function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
   weeklyData: number[];
@@ -490,7 +605,7 @@ export function App() {
 
           {tab === 'trends' && (
             charTrends.length > 0
-              ? <VBar data={charTrends} labels={monthLabels} color="#2563eb" unit={t('chars')} />
+              ? <LineChart data={charTrends} labels={monthLabels} color="#6366f1" unit={t('chars')} />
               : <div style={{ opacity: 0.3, fontSize: '12px', textAlign: 'center', padding: '24px 0' }}>—</div>
           )}
         </div>
