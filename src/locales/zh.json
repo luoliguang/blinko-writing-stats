@@ -1,14 +1,21 @@
 {
-  "streak": "天连续写作",
-  "totalNotes": "总笔记数",
-  "activeDays": "活跃天数",
+  "streak": "天连续",
+  "totalNotes": "笔记数",
+  "totalChars": "总字数",
+  "activeDays": "活跃天",
   "bestStreak": "最长连续",
   "weeklyPattern": "每周规律",
   "monthlyTrend": "月度趋势",
-  "writeToday": "今天写点什么，开始你的连续记录！",
-  "notes": "条笔记",
+  "charTrend": "字数趋势",
+  "topTags": "热门标签",
+  "writeToday": "今天写一篇，开始连续记录！",
+  "notes": "篇",
+  "chars": "字",
   "footer": "过去365天",
   "tab_weekly": "每周",
   "tab_heatmap": "热力图",
-  "weeks": "日,一,二,三,四,五,六"
+  "tab_tags": "标签",
+  "tab_trends": "趋势",
+  "weeks": "日,一,二,三,四,五,六",
+  "loading": "加载中..."
 }

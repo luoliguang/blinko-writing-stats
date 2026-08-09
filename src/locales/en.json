@@ -1,14 +1,21 @@
 {
   "streak": "Day Streak",
-  "totalNotes": "Total Notes",
+  "totalNotes": "Notes",
+  "totalChars": "Characters",
   "activeDays": "Active Days",
   "bestStreak": "Best Streak",
   "weeklyPattern": "Weekly Pattern",
   "monthlyTrend": "Monthly Trend",
+  "charTrend": "Char Trend",
+  "topTags": "Top Tags",
   "writeToday": "Write today to start your streak!",
   "notes": "notes",
+  "chars": "chars",
   "footer": "Past 365 days",
   "tab_weekly": "Weekly",
   "tab_heatmap": "Heatmap",
-  "weeks": "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+  "tab_tags": "Tags",
+  "tab_trends": "Trends",
+  "weeks": "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
+  "loading": "Loading..."
 }
