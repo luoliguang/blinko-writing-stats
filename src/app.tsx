@@ -578,14 +578,19 @@ export function App() {
     setDayNotes([]);
     setLoadingDay(true);
     try {
-      const start = new Date(date + 'T00:00:00');
-      const end = new Date(date + 'T23:59:59');
-      const notes = await (window.Blinko.api.note.list as any).mutate({
-        page: 1, size: 20, orderBy: 'asc',
-        startDate: start.toISOString(),
-        endDate: end.toISOString(),
+      const res = await fetch('/api/v1/note/list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          page: 1, size: 20, orderBy: 'asc',
+          startDate: `${date}T00:00:00.000Z`,
+          endDate: `${date}T23:59:59.999Z`,
+        }),
       });
-      setDayNotes(notes || []);
+      if (!res.ok) throw new Error(`${res.status}`);
+      const notes = await res.json();
+      setDayNotes(Array.isArray(notes) ? notes : []);
     } catch { setDayNotes([]); }
     setLoadingDay(false);
   };
