@@ -25,7 +25,7 @@ System.register([], (exports) => ({
           onClick: () => {
             window.Blinko.showDialog({
               title: '✍️ Writing Stats',
-              size: 'sm',
+              size: '3xl',
               content: () => {
                 const container = document.createElement('div');
                 render(<App />, container);
