@@ -1,5 +1,9 @@
 /** @jsxImportSource preact */
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
+import {
+  PenLine, Type, CalendarDays, Flame,
+  Activity, FileText, TrendingUp, TrendingDown,
+} from 'lucide-preact';
 import en from './locales/en.json';
 import zh from './locales/zh.json';
 
@@ -50,28 +54,6 @@ function lastNMonths(n: number) {
   }
   return months;
 }
-
-// ── SVG Icons ────────────────────────────────────────────
-const IconPen = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-  </svg>
-);
-const IconText = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>
-  </svg>
-);
-const IconCalendar = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-  </svg>
-);
-const IconFlame = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-  </svg>
-);
 
 // ── VBar tooltip (relative positioning, works in dialogs) ─
 function VBarItem({ value, label, max, color, unit }: { value: number; label: string; max: number; color: string; unit: string }) {
@@ -267,20 +249,24 @@ function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
 
   const thisMonth = monthData[monthData.length - 1];
   const lastMonth = monthData[monthData.length - 2];
-  const thisMonthNotes = thisMonth?.totalWords ?? 0;
-  const lastMonthNotes = lastMonth?.totalWords ?? 0;
-  const delta = lastMonthNotes > 0
-    ? Math.round(((thisMonthNotes - lastMonthNotes) / lastMonthNotes) * 100)
+  const thisMonthWords = thisMonth?.totalWords ?? 0;
+  const lastMonthWords = lastMonth?.totalWords ?? 0;
+  const delta = lastMonthWords > 0
+    ? Math.round(((thisMonthWords - lastMonthWords) / lastMonthWords) * 100)
     : null;
 
   const avgChars = totalNotes > 0
     ? Math.round(monthData.reduce((s, m) => s + m.totalWords, 0) / totalNotes)
     : 0;
 
-  const chips: { icon: string; text: string }[] = [
-    { icon: '📅', text: `${t('mostActive')}: ${mostActiveDay}` },
-    { icon: '✍️', text: `${t('avgNote')}: ${fmtNum(avgChars)} ${t('chars')}` },
-    ...(delta !== null ? [{ icon: delta >= 0 ? '📈' : '📉', text: `${t('thisMonth')}: ${delta >= 0 ? '+' : ''}${delta}%` }] : []),
+  const chips: { icon: any; text: string; color: string }[] = [
+    { icon: <Activity size={12} />, text: `${t('mostActive')}: ${mostActiveDay}`, color: '#6366f1' },
+    { icon: <FileText size={12} />, text: `${t('avgNote')}: ${fmtNum(avgChars)} ${t('chars')}`, color: '#8b5cf6' },
+    ...(delta !== null ? [{
+      icon: delta >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />,
+      text: `${t('thisMonth')}: ${delta >= 0 ? '+' : ''}${delta}%`,
+      color: delta >= 0 ? '#22c55e' : '#ef4444',
+    }] : []),
   ];
 
   return (
@@ -288,11 +274,12 @@ function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
       {chips.map((c, i) => (
         <div key={i} style={{
           display: 'flex', alignItems: 'center', gap: '5px',
-          background: 'rgba(128,128,128,0.08)', border: '1px solid rgba(128,128,128,0.12)',
-          borderRadius: '20px', padding: '4px 10px', fontSize: '11px', opacity: 0.7,
+          background: `${c.color}10`, border: `1px solid ${c.color}25`,
+          borderRadius: '20px', padding: '4px 10px', fontSize: '11px',
+          color: c.color, fontWeight: 500,
         }}>
-          <span style={{ fontSize: '12px' }}>{c.icon}</span>
-          <span>{c.text}</span>
+          {c.icon}
+          <span style={{ color: 'inherit', opacity: 0.85 }}>{c.text}</span>
         </div>
       ))}
     </div>
@@ -420,10 +407,10 @@ export function App() {
 
         {/* Stat cards 2×2 */}
         <div class="ws-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', animationDelay: '60ms' }}>
-          <StatCard value={fmtNum(totalNotes)} label={t('totalNotes')} icon={<IconPen />} accent="#3b82f6" />
-          <StatCard value={fmtNum(totalChars)} label={t('totalChars')} icon={<IconText />} accent="#8b5cf6" />
-          <StatCard value={activeDays} label={t('activeDays')} icon={<IconCalendar />} accent="#22c55e" />
-          <StatCard value={streak.longest} label={t('bestStreak')} icon={<IconFlame />} accent="#f59e0b" />
+          <StatCard value={fmtNum(totalNotes)} label={t('totalNotes')} icon={<PenLine size={15} />} accent="#3b82f6" />
+          <StatCard value={fmtNum(totalChars)} label={t('totalChars')} icon={<Type size={15} />} accent="#8b5cf6" />
+          <StatCard value={activeDays} label={t('activeDays')} icon={<CalendarDays size={15} />} accent="#22c55e" />
+          <StatCard value={streak.longest} label={t('bestStreak')} icon={<Flame size={15} />} accent="#f59e0b" />
         </div>
       </div>
 

@@ -1537,6 +1537,11 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+lucide-preact@^1.31.0:
+  version "1.31.0"
+  resolved "https://registry.npmmirror.com/lucide-preact/-/lucide-preact-1.31.0.tgz#dd985e71daa9561a225434b850251b7c48457217"
+  integrity sha512-Of9TS1ZFAnWpDZZ/iQl4ydyNHU8peDEtqgQFDOhVAU3SdYosUvP/BJeP0lFLZ4QWx5dxABhToeD03Btoa7G/ug==
+
 "magic-string@0.x >= 0.26.0", magic-string@^0.30.21:
   version "0.30.21"
   resolved "https://registry.npmmirror.com/magic-string/-/magic-string-0.30.21.tgz#56763ec09a0fa8091df27879fd94d19078c00d91"
