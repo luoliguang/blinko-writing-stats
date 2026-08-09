@@ -130,9 +130,83 @@ function HBar({ label, value, max, color }: { label: string; value: number; max:
   );
 }
 
+// ── Strip markdown for preview ────────────────────────────
+function stripMd(text: string) {
+  return text
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/#{1,6}\s/g, '')
+    .replace(/\*\*|__|[*_`]/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\n+/g, ' ')
+    .trim();
+}
+
+// ── Day note panel ────────────────────────────────────────
+function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
+  date: string; notes: any[]; loading: boolean;
+  onClose: () => void; monthNames: string[];
+}) {
+  const [month, day] = [parseInt(date.slice(5, 7)) - 1, date.slice(8, 10)];
+  const label = `${monthNames[month]} ${day}`;
+
+  return (
+    <div style={{
+      marginTop: '10px', borderRadius: '10px',
+      border: '1px solid rgba(99,102,241,0.2)',
+      background: 'rgba(99,102,241,0.05)',
+      overflow: 'hidden',
+      animation: 'ws-up 0.2s ease both',
+    }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid rgba(128,128,128,0.1)' }}>
+        <span style={{ fontSize: '12px', fontWeight: 700, color: '#6366f1' }}>{label}</span>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.4, padding: '0 2px', display: 'flex', alignItems: 'center' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      {/* Body */}
+      <div style={{ maxHeight: '160px', overflowY: 'auto', scrollbarWidth: 'none' }}>
+        <style>{`.ws-np::-webkit-scrollbar{display:none}`}</style>
+        <div class="ws-np">
+          {loading && (
+            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[1, 2].map(i => (
+                <div key={i} style={{ height: '14px', borderRadius: '4px', background: 'rgba(128,128,128,0.1)', animation: 'ws-pulse 1.4s ease-in-out infinite' }} />
+              ))}
+            </div>
+          )}
+          {!loading && notes.length === 0 && (
+            <div style={{ padding: '14px 12px', fontSize: '12px', opacity: 0.35 }}>—</div>
+          )}
+          {!loading && notes.map((note: any) => {
+            const preview = stripMd(note.content || '').slice(0, 100);
+            const time = note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+            return (
+              <div key={note.id} style={{
+                padding: '8px 12px', borderBottom: '1px solid rgba(128,128,128,0.07)',
+                display: 'flex', gap: '8px', alignItems: 'flex-start',
+              }}>
+                <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', marginTop: '5px', flexShrink: 0, opacity: 0.6 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '12px', lineHeight: 1.5, opacity: 0.75, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {preview || '—'}
+                  </div>
+                </div>
+                <span style={{ fontSize: '10px', opacity: 0.3, flexShrink: 0, marginTop: '2px' }}>{time}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Heatmap with axis labels + info bar ──────────────────
-function Heatmap({ data, unit, weekLabels, monthNames }: {
+function Heatmap({ data, unit, weekLabels, monthNames, selectedDay, onDayClick }: {
   data: DayCount[]; unit: string; weekLabels: string[]; monthNames: string[];
+  selectedDay: string | null; onDayClick: (date: string, count: number) => void;
 }) {
   const countMap: Record<string, number> = {};
   data.forEach(d => { countMap[d.date] = d.count; });
@@ -217,10 +291,13 @@ function Heatmap({ data, unit, weekLabels, monthNames }: {
                     <div key={di}
                       onMouseEnter={() => setInfo(cell.count > 0 ? `${cell.date} · ${cell.count} ${unit}` : cell.date)}
                       onMouseLeave={() => setInfo('')}
+                      onClick={() => cell.count > 0 && onDayClick(cell.date, cell.count)}
                       style={{
                         width: `${CELL}px`, height: `${CELL}px`, borderRadius: '2px',
                         background: getColor(cell.count),
-                        cursor: 'default',
+                        cursor: cell.count > 0 ? 'pointer' : 'default',
+                        outline: selectedDay === cell.date ? '2px solid #6366f1' : 'none',
+                        outlineOffset: '1px',
                       }}
                     />
                   ))}
@@ -461,6 +538,9 @@ export function App() {
   const [activeDays, setActiveDays] = useState(0);
   const [weeklyData, setWeeklyData] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
   const [tab, setTab] = useState<Tab>('heatmap');
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [dayNotes, setDayNotes] = useState<any[]>([]);
+  const [loadingDay, setLoadingDay] = useState(false);
   const [lang, setLang] = useState<'zh' | 'en'>(
     window.Blinko.i18n.language?.startsWith('zh') ? 'zh' : 'en'
   );
@@ -491,6 +571,24 @@ export function App() {
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
+
+  const handleDayClick = async (date: string) => {
+    if (selectedDay === date) { setSelectedDay(null); setDayNotes([]); return; }
+    setSelectedDay(date);
+    setDayNotes([]);
+    setLoadingDay(true);
+    try {
+      const start = new Date(date + 'T00:00:00');
+      const end = new Date(date + 'T23:59:59');
+      const notes = await (window.Blinko.api.note.list as any).mutate({
+        page: 1, size: 20, orderBy: 'asc',
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
+      });
+      setDayNotes(notes || []);
+    } catch { setDayNotes([]); }
+    setLoadingDay(false);
+  };
 
   if (loading) return <Skeleton />;
 
@@ -580,14 +678,23 @@ export function App() {
         }}>
           {tab === 'heatmap' && (
             <>
-              <Heatmap data={dailyData} unit={t('notes')} weekLabels={weekLabels} monthNames={monthNames} />
-              <InsightsRow
-                weeklyData={weeklyData}
-                weekLabels={weekLabels}
-                monthData={monthData}
-                totalNotes={totalNotes}
-                t={t}
+              <Heatmap
+                data={dailyData} unit={t('notes')}
+                weekLabels={weekLabels} monthNames={monthNames}
+                selectedDay={selectedDay} onDayClick={handleDayClick}
               />
+              {selectedDay ? (
+                <DayNotePanel
+                  date={selectedDay} notes={dayNotes}
+                  loading={loadingDay} monthNames={monthNames}
+                  onClose={() => { setSelectedDay(null); setDayNotes([]); }}
+                />
+              ) : (
+                <InsightsRow
+                  weeklyData={weeklyData} weekLabels={weekLabels}
+                  monthData={monthData} totalNotes={totalNotes} t={t}
+                />
+              )}
             </>
           )}
 
