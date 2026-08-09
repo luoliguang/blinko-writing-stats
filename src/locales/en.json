@@ -1,5 +1,14 @@
 {
-  "title": "My Plugin",
-  "countLabel": "Count is {{count}}",
-  "successMessage": "Success!"
-} 
+  "streak": "Day Streak",
+  "totalNotes": "Total Notes",
+  "activeDays": "Active Days",
+  "bestStreak": "Best Streak",
+  "weeklyPattern": "Weekly Pattern",
+  "monthlyTrend": "Monthly Trend",
+  "writeToday": "Write today to start your streak!",
+  "notes": "notes",
+  "footer": "Past 365 days",
+  "tab_weekly": "Weekly",
+  "tab_heatmap": "Heatmap",
+  "weeks": "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+}

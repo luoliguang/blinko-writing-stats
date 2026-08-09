@@ -1,16 +1,16 @@
 {
-  "name": "blinko-plugin-demo",
-  "author": "blinko-offical",
-  "url": "https://github.com/blinko-space/blinko-plugin-template",
-  "version": "0.0.4",
+  "name": "blinko-writing-stats",
+  "author": "luoliguang",
+  "url": "https://github.com/luoliguang/blinko-writing-stats",
+  "version": "0.1.0",
   "minAppVersion": "0.0.0",
   "displayName": {
-    "default": "Blinko plugin demo",
-    "zh": "Blinko插件示例"
+    "default": "Writing Stats",
+    "zh": "写作统计"
   },
   "description": {
-    "default": "This is a blinko plugin demo, you can use it as a template to create your own plugin.",
-    "zh": "这是一个blinko插件示例，你可以使用它作为模板来创建自己的插件。"
+    "default": "Track your writing streak, weekly patterns, and monthly trends.",
+    "zh": "追踪你的写作连续天数、每周规律和月度趋势。"
   },
   "readme": {
     "default": "README.md",
