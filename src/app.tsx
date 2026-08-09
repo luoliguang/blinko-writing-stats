@@ -17,6 +17,25 @@ interface MonthData {
 type Locale = typeof en;
 type Tab = 'heatmap' | 'weekly' | 'tags' | 'trends';
 
+// ── Count-up hook ────────────────────────────────────────
+function useCountUp(target: number, duration = 750) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (target === 0) { setVal(0); return; }
+    let raf: number;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - t0) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      setVal(Math.round(eased * target));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+  return val;
+}
+
 // ── Helpers ──────────────────────────────────────────────
 function fmtNum(n: number) {
   if (n >= 10000) return (n / 10000).toFixed(1) + 'w';
@@ -221,8 +240,18 @@ function Heatmap({ data, unit, weekLabels, monthNames }: {
   );
 }
 
-// ── Stat card ────────────────────────────────────────────
-function StatCard({ value, label, icon, accent }: { value: string | number; label: string; icon: any; accent: string }) {
+// ── Animated streak number ───────────────────────────────
+function AnimatedStreak({ target }: { target: number }) {
+  const val = useCountUp(target, 600);
+  return <>{val}</>;
+}
+
+// ── Stat card (with count-up) ────────────────────────────
+function StatCard({ raw, label, icon, accent, fmt = fmtNum }: {
+  raw: number; label: string; icon: any; accent: string;
+  fmt?: (n: number) => string;
+}) {
+  const animated = useCountUp(raw);
   return (
     <div style={{
       borderRadius: '12px', padding: '14px 10px',
@@ -230,7 +259,9 @@ function StatCard({ value, label, icon, accent }: { value: string | number; labe
       background: `${accent}10`, border: `1px solid ${accent}20`,
     }}>
       <span style={{ color: accent, opacity: 0.85 }}>{icon}</span>
-      <span style={{ fontSize: '22px', fontWeight: 800, lineHeight: 1 }}>{value}</span>
+      <span style={{ fontSize: '22px', fontWeight: 800, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+        {fmt(animated)}
+      </span>
       <span style={{ fontSize: '10px', opacity: 0.5, textAlign: 'center', fontWeight: 600 }}>{label}</span>
     </div>
   );
@@ -391,7 +422,9 @@ export function App() {
             }}>{lang === 'zh' ? 'EN' : '中文'}</button>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '46px', fontWeight: 900, lineHeight: 1, letterSpacing: '-2px' }}>{streak.cur}</div>
+            <div style={{ fontSize: '46px', fontWeight: 900, lineHeight: 1, letterSpacing: '-2px', fontVariantNumeric: 'tabular-nums' }}>
+              <AnimatedStreak target={streak.cur} />
+            </div>
             <div style={{ fontSize: '12px', opacity: 0.8, fontWeight: 600, marginTop: '3px' }}>{t('streak')}</div>
             {!active && <div style={{ fontSize: '11px', opacity: 0.4, marginTop: '4px', lineHeight: 1.4 }}>{t('writeToday')}</div>}
           </div>
@@ -407,10 +440,10 @@ export function App() {
 
         {/* Stat cards 2×2 */}
         <div class="ws-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', animationDelay: '60ms' }}>
-          <StatCard value={fmtNum(totalNotes)} label={t('totalNotes')} icon={<PenLine size={15} />} accent="#3b82f6" />
-          <StatCard value={fmtNum(totalChars)} label={t('totalChars')} icon={<Type size={15} />} accent="#8b5cf6" />
-          <StatCard value={activeDays} label={t('activeDays')} icon={<CalendarDays size={15} />} accent="#22c55e" />
-          <StatCard value={streak.longest} label={t('bestStreak')} icon={<Flame size={15} />} accent="#f59e0b" />
+          <StatCard raw={totalNotes} label={t('totalNotes')} icon={<PenLine size={15} />} accent="#3b82f6" />
+          <StatCard raw={totalChars} label={t('totalChars')} icon={<Type size={15} />} accent="#8b5cf6" />
+          <StatCard raw={activeDays} label={t('activeDays')} icon={<CalendarDays size={15} />} accent="#22c55e" fmt={String} />
+          <StatCard raw={streak.longest} label={t('bestStreak')} icon={<Flame size={15} />} accent="#f59e0b" fmt={String} />
         </div>
       </div>
 
