@@ -75,57 +75,104 @@ function lastNMonths(n: number) {
 }
 
 // ── VBar tooltip (relative positioning, works in dialogs) ─
-function VBarItem({ value, label, max, color, unit }: { value: number; label: string; max: number; color: string; unit: string }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end', position: 'relative' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}>
-      {show && value > 0 && (
-        <div style={{
-          position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)',
-          background: 'rgba(10,10,20,0.88)', color: '#fff',
-          padding: '3px 8px', borderRadius: '6px', fontSize: '10px',
-          whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 10,
-          marginBottom: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-        }}>{label}: {fmtNum(value)} {unit}</div>
-      )}
-      <div style={{
-        width: '100%', borderRadius: '3px 3px 0 0',
-        background: value > 0 ? color : 'rgba(128,128,128,0.1)',
-        height: `${Math.max((value / max) * 60, value > 0 ? 4 : 0)}px`,
-        transition: 'height 0.5s cubic-bezier(.4,0,.2,1)',
-        opacity: value > 0 ? (0.35 + 0.65 * (value / max)) : 1,
-      }} />
-      <span style={{ fontSize: '9px', opacity: 0.4, marginTop: '3px', fontWeight: 500, lineHeight: 1 }}>{label}</span>
-    </div>
-  );
-}
-
-function VBar({ data, labels, color, unit }: { data: number[]; labels: string[]; color: string; unit: string }) {
+// ── Weekly chart — enhanced bar with track + glow + labels ─
+function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[]; unit: string }) {
   const max = Math.max(...data, 1);
+  const total = data.reduce((s, v) => s + v, 0) || 1;
+  const peakIdx = data.reduce((best, v, i) => v > data[best]! ? i : best, 0);
+  const TRACK = 80;
+
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '80px', width: '100%' }}>
-      {data.map((v, i) => (
-        <VBarItem key={i} value={v} label={labels[i]!} max={max} color={color} unit={unit} />
-      ))}
+    <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-end', padding: '4px 2px 0' }}>
+      {data.map((v, i) => {
+        const isPeak = i === peakIdx && v > 0;
+        const barH = Math.max((v / max) * TRACK, v > 0 ? 5 : 0);
+        const pct = Math.round((v / total) * 100);
+        return (
+          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+            {/* Count */}
+            <span style={{
+              fontSize: '10px', fontWeight: 700, minHeight: '13px',
+              color: isPeak ? '#6366f1' : 'inherit',
+              opacity: v > 0 ? (isPeak ? 1 : 0.55) : 0,
+            }}>{v > 0 ? v : ''}</span>
+
+            {/* Track + bar */}
+            <div style={{ position: 'relative', width: '100%', height: `${TRACK}px` }}>
+              {/* Track */}
+              <div style={{
+                position: 'absolute', inset: 0, borderRadius: '5px 5px 0 0',
+                background: 'rgba(128,128,128,0.08)',
+              }} />
+              {/* Bar */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                height: `${barH}px`, borderRadius: '5px 5px 0 0',
+                background: isPeak
+                  ? 'linear-gradient(180deg,#818cf8 0%,#6366f1 100%)'
+                  : v > 0 ? 'linear-gradient(180deg,#a5b4fc 0%,#818cf8 100%)' : 'transparent',
+                boxShadow: isPeak ? '0 0 14px rgba(99,102,241,0.55), 0 0 5px rgba(99,102,241,0.9)' : 'none',
+                transition: 'height 0.5s cubic-bezier(.4,0,.2,1)',
+              }} />
+            </div>
+
+            {/* Day label */}
+            <span style={{
+              fontSize: '10px', fontWeight: isPeak ? 700 : 500,
+              color: isPeak ? '#6366f1' : 'inherit',
+              opacity: isPeak ? 1 : 0.45,
+            }}>{labels[i]}</span>
+
+            {/* Percentage */}
+            <span style={{ fontSize: '9px', opacity: 0.28, fontWeight: 500, minHeight: '11px' }}>
+              {v > 0 ? `${pct}%` : ''}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-// ── Horizontal bar (tags) ────────────────────────────────
-function HBar({ label, value, max, color }: { label: string; value: number; max: number; color: string }) {
+// ── Tag cloud ─────────────────────────────────────────────
+function tagHue(name: string): number {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+  return Math.abs(h) % 360;
+}
+
+function TagCloud({ tags }: { tags: [string, number][] }) {
+  if (!tags.length) return (
+    <div style={{ opacity: 0.3, fontSize: '12px', textAlign: 'center', padding: '28px 0' }}>—</div>
+  );
+  const maxCount = tags[0]![1];
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-      <span style={{ fontSize: '11px', opacity: 0.6, width: '80px', flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
-      <div style={{ flex: 1, background: 'rgba(128,128,128,0.1)', borderRadius: '4px', height: '7px', overflow: 'hidden' }}>
-        <div style={{
-          width: `${(value / max) * 100}%`, height: '100%',
-          background: color, borderRadius: '4px',
-          transition: 'width 0.6s cubic-bezier(.4,0,.2,1)',
-        }} />
-      </div>
-      <span style={{ fontSize: '11px', opacity: 0.45, width: '28px', textAlign: 'right', flexShrink: 0 }}>{value}</span>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignContent: 'flex-start', padding: '4px 0' }}>
+      {tags.map(([name, count]) => {
+        const ratio = count / maxCount;
+        const hue = tagHue(name);
+        const fontSize = 11 + Math.round(ratio * 8);
+        const pad = `${4 + Math.round(ratio * 3)}px ${9 + Math.round(ratio * 5)}px`;
+        return (
+          <div key={name} style={{
+            display: 'inline-flex', alignItems: 'center', gap: '5px',
+            padding: pad, borderRadius: '20px',
+            background: `hsla(${hue},68%,52%,0.11)`,
+            border: `1px solid hsla(${hue},62%,52%,0.28)`,
+            fontSize: `${fontSize}px`,
+            fontWeight: ratio > 0.5 ? 700 : 500,
+            color: `hsl(${hue},55%,58%)`,
+            cursor: 'default',
+            transition: 'transform 0.12s, box-shadow 0.12s',
+          }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; (e.currentTarget as HTMLElement).style.boxShadow = `0 2px 10px hsla(${hue},65%,52%,0.25)`; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = ''; }}
+          >
+            <span>#{name}</span>
+            <span style={{ fontSize: `${fontSize - 2}px`, opacity: 0.55, fontWeight: 600 }}>{count}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -751,15 +798,11 @@ export function App() {
           )}
 
           {tab === 'weekly' && (
-            <VBar data={weeklyData} labels={weekLabels} color="#6366f1" unit={t('notes')} />
+            <WeeklyChart data={weeklyData} labels={weekLabels} unit={t('notes')} />
           )}
 
           {tab === 'tags' && (
-            topTags.length > 0
-              ? <div>{topTags.map(([name, count]) => (
-                  <HBar key={name} label={name} value={count} max={maxTag} color="linear-gradient(90deg,#6366f1,#8b5cf6)" />
-                ))}</div>
-              : <div style={{ opacity: 0.3, fontSize: '12px', textAlign: 'center', padding: '24px 0' }}>—</div>
+            <TagCloud tags={topTags} />
           )}
 
           {tab === 'trends' && (
