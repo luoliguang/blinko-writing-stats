@@ -1,74 +1,39 @@
-# Blinko Plugin Template
+# Writing Stats — Blinko Plugin
 
-A template for building Blinko plugins quickly and efficiently.
+A writing statistics plugin for [Blinko](https://github.com/blinko-space/blinko) that tracks your writing streaks, weekly patterns, monthly trends, and tag usage.
 
-[Blinko Plugin Development Documentation](https://blinko.mintlify.app/plugins/get-started)
+## Features
 
-## 🚀 Quick Start
+- **Streak Counter** — Track your current and longest daily writing streaks
+- **Heatmap** — GitHub-style contribution heatmap for the past 23 weeks, click any day to preview that day's notes
+- **Weekly Pattern** — Polar radial chart showing which days of the week you write most
+- **Tag Cloud** — Visualize your most-used tags with proportional sizing and color coding
+- **Monthly Trends** — Line chart tracking your character output over the past 6 months
+- **Stats Cards** — At-a-glance numbers for total notes, characters, active days, and best streak
 
-1. Clone this repository
+## Installation
+
+Install via the Blinko plugin marketplace, or manually:
+
+1. Download the latest release zip
+2. Open Blinko → Settings → Plugins → Install from file
+
+## Usage
+
+Click the **✍️ Writing Stats** button in the Blinko toolbar to open the stats dialog.
+
+- Click a heatmap cell to see notes written on that day
+- Click a note row to expand the full preview
+- Click **打开笔记** to navigate directly to that note
+
+## Development
+
 ```bash
-git clone https://github.com/blinko-space/blinko-plugin-template.git
-cd blinko-plugin-template
+yarn install
+yarn dev        # start dev server (hot reload)
+yarn vite build # production build
 ```
 
-2. Install dependencies
-```bash
-bun install
-```
-
-3. Start development server
-```bash
-bun run dev
-```
-
-4. Visit `http://localhost:3000` for connection instructions
-
-## 📖 Official Documentation
-
-> ⭐ **Important: Please visit [Blinko Plugin Development Documentation](https://blinko.mintlify.app/plugins/get-started) for complete development guides and best practices!**
-
-## 🛠️ Development Commands
-
-- `bun run dev` - Start development server
-- `bun run release:publish` - Build and publish plugin
-
-## 📁 Directory Structure
-
-```
-├── src/              # Source code directory
-├── dist/            # Development build output
-├── release/         # Production build output
-├── plugin.json      # Plugin configuration
-└── vite.config.ts   # Vite configuration
-```
-
-## 🔧 Configuration
-
-Configure your plugin in `plugin.json`:
-
-```json
-{
-  "name": "blinko-plugin-demo",
-  "author": "blinko-offical",
-  "url": "https://github.com/blinko-space/blinko-plugin-template",
-  "version": "0.0.4",
-  "minAppVersion": "0.0.0",
-  "displayName": {
-    "default": "Blinko plugin demo",
-    "zh": "Blinko插件示例"
-  },
-  "description": {
-    "default": "This is a blinko plugin demo, you can use it as a template to create your own plugin.",
-    "zh": "这是一个blinko插件示例，你可以使用它作为模板来创建自己的插件。"
-  },
-  "readme": {
-    "default": "README.md",
-    "zh": "README_zh.md"
-  }
-}
-```
-
-## 📝 License
+## License
 
 MIT
