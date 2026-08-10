@@ -285,7 +285,6 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
           )}
           {!loading && notes.map((note: any) => {
             const full = stripMd(note.content || '');
-            const preview = full.slice(0, 100);
             const isExpanded = expandedId === note.id;
             const time = note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
             return (
@@ -296,19 +295,23 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
                 <div
                   onClick={() => setExpandedId(isExpanded ? null : note.id)}
                   style={{
-                    padding: '8px 12px', display: 'flex', gap: '8px', alignItems: 'flex-start',
+                    padding: '8px 12px', display: 'flex', gap: '8px', alignItems: 'center',
                     cursor: 'pointer',
                     background: isExpanded ? 'rgba(99,102,241,0.06)' : 'transparent',
                     transition: 'background 0.15s',
                   }}
                 >
-                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', marginTop: '5px', flexShrink: 0, opacity: isExpanded ? 1 : 0.6 }} />
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', flexShrink: 0, opacity: isExpanded ? 1 : 0.6 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: '12px', lineHeight: 1.5, opacity: 0.75, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {preview || '—'}{!isExpanded && full.length > 100 && <span style={{ opacity: 0.4 }}> …</span>}
+                    <div style={{
+                      fontSize: '12px', lineHeight: 1.5, opacity: 0.75,
+                      overflow: 'hidden', textOverflow: 'ellipsis',
+                      display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+                    } as any}>
+                      {full || '—'}
                     </div>
                   </div>
-                  <span style={{ fontSize: '10px', opacity: 0.3, flexShrink: 0, marginTop: '2px' }}>{time}</span>
+                  <span style={{ fontSize: '10px', opacity: 0.3, flexShrink: 0 }}>{time}</span>
                 </div>
 
                 {/* Expanded content */}
