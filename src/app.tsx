@@ -75,62 +75,118 @@ function lastNMonths(n: number) {
 }
 
 // ── VBar tooltip (relative positioning, works in dialogs) ─
-// ── Weekly chart — enhanced bar with track + glow + labels ─
+// ── Weekly chart — polar radial bars ─────────────────────
 function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[]; unit: string }) {
+  const [hovered, setHovered] = useState<number | null>(null);
   const max = Math.max(...data, 1);
-  const total = data.reduce((s, v) => s + v, 0) || 1;
+  const total = data.reduce((s, v) => s + v, 0);
   const peakIdx = data.reduce((best, v, i) => v > data[best]! ? i : best, 0);
-  const TRACK = 80;
+
+  const W = 320, H = 210;
+  const cx = W / 2, cy = H / 2 + 2;
+  const R_IN = 30, R_OUT = 78, R_LBL = R_OUT + 22;
+  const SW = 14, N = 7;
+
+  const anchor = (cos: number) => cos > 0.3 ? 'start' : cos < -0.3 ? 'end' : 'middle';
+  const activeIdx = hovered !== null ? hovered : peakIdx;
 
   return (
-    <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-end', padding: '4px 2px 0' }}>
-      {data.map((v, i) => {
-        const isPeak = i === peakIdx && v > 0;
-        const barH = Math.max((v / max) * TRACK, v > 0 ? 5 : 0);
-        const pct = Math.round((v / total) * 100);
-        return (
-          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-            {/* Count */}
-            <span style={{
-              fontSize: '10px', fontWeight: 700, minHeight: '13px',
-              color: isPeak ? '#6366f1' : 'inherit',
-              opacity: v > 0 ? (isPeak ? 1 : 0.55) : 0,
-            }}>{v > 0 ? v : ''}</span>
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+      <defs>
+        <filter id="ws-pglow" x="-120%" y="-120%" width="340%" height="340%">
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <radialGradient id="ws-hub" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(99,102,241,0.18)" />
+          <stop offset="100%" stopColor="rgba(99,102,241,0.04)" />
+        </radialGradient>
+      </defs>
 
-            {/* Track + bar */}
-            <div style={{ position: 'relative', width: '100%', height: `${TRACK}px` }}>
-              {/* Track */}
-              <div style={{
-                position: 'absolute', inset: 0, borderRadius: '5px 5px 0 0',
-                background: 'rgba(128,128,128,0.08)',
-              }} />
-              {/* Bar */}
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0,
-                height: `${barH}px`, borderRadius: '5px 5px 0 0',
-                background: isPeak
-                  ? 'linear-gradient(180deg,#818cf8 0%,#6366f1 100%)'
-                  : v > 0 ? 'linear-gradient(180deg,#a5b4fc 0%,#818cf8 100%)' : 'transparent',
-                boxShadow: isPeak ? '0 0 14px rgba(99,102,241,0.55), 0 0 5px rgba(99,102,241,0.9)' : 'none',
-                transition: 'height 0.5s cubic-bezier(.4,0,.2,1)',
-              }} />
-            </div>
+      {/* Guide rings */}
+      <circle cx={cx} cy={cy} r={R_OUT} fill="none" stroke="rgba(128,128,128,0.07)" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r={(R_IN + R_OUT) / 2} fill="none"
+        stroke="rgba(128,128,128,0.04)" strokeWidth="1" strokeDasharray="3 6" />
+
+      {/* Radial bars */}
+      {data.map((v, i) => {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        const cos = Math.cos(angle), sin = Math.sin(angle);
+        const isPeak = i === peakIdx && v > 0;
+        const isHov = hovered === i;
+        const barR = v > 0 ? R_IN + (v / max) * (R_OUT - R_IN) : 0;
+        const x1 = cx + (R_IN + 1) * cos, y1 = cy + (R_IN + 1) * sin;
+        const x2 = cx + (v > 0 ? barR : R_IN + 5) * cos;
+        const y2 = cy + (v > 0 ? barR : R_IN + 5) * sin;
+        const lx = cx + R_LBL * cos, ly = cy + R_LBL * sin;
+        const color = (isPeak || isHov) ? '#6366f1' : '#818cf8';
+        const opac = v > 0
+          ? (isPeak ? 1 : isHov ? 0.85 : 0.28 + 0.52 * (v / max))
+          : 0.09;
+
+        return (
+          <g key={i}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
+            style={{ cursor: 'default' }}>
+            {/* Wide invisible hit area */}
+            <line x1={x1} y1={y1} x2={cx + R_OUT * cos} y2={cy + R_OUT * sin}
+              stroke="transparent" strokeWidth={SW + 14} strokeLinecap="round" />
+
+            {/* Glow halo for peak */}
+            {isPeak && v > 0 && (
+              <line x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke="#818cf8" strokeWidth={SW + 10} strokeLinecap="round"
+                opacity="0.16" filter="url(#ws-pglow)" />
+            )}
+
+            {/* Bar */}
+            <line x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={color} strokeWidth={v > 0 ? SW : 2} strokeLinecap="round"
+              opacity={opac} />
+
+            {/* Tip dot */}
+            {v > 0 && (
+              <circle cx={x2} cy={y2} r={isPeak ? 4.5 : isHov ? 3.5 : 3}
+                fill={color} opacity={isPeak ? 1 : opac}
+                style={{ transition: 'r 0.12s' }} />
+            )}
+
+            {/* Count badge near tip on hover or peak */}
+            {(isPeak || isHov) && v > 0 && (
+              <text
+                x={cx + (barR + 14) * cos}
+                y={cy + (barR + 14) * sin + 4}
+                textAnchor={anchor(cos)}
+                fontSize="9.5" fill={color} fontWeight="700" opacity="0.9">
+                {v}
+              </text>
+            )}
 
             {/* Day label */}
-            <span style={{
-              fontSize: '10px', fontWeight: isPeak ? 700 : 500,
-              color: isPeak ? '#6366f1' : 'inherit',
-              opacity: isPeak ? 1 : 0.45,
-            }}>{labels[i]}</span>
-
-            {/* Percentage */}
-            <span style={{ fontSize: '9px', opacity: 0.28, fontWeight: 500, minHeight: '11px' }}>
-              {v > 0 ? `${pct}%` : ''}
-            </span>
-          </div>
+            <text x={lx} y={ly + 4}
+              textAnchor={anchor(cos)}
+              fontSize={isPeak ? "11" : "10"}
+              fill={isPeak || isHov ? '#6366f1' : 'currentColor'}
+              fontWeight={isPeak ? "700" : "500"}
+              opacity={isPeak ? 1 : isHov ? 0.7 : 0.42}>
+              {labels[i]}
+            </text>
+          </g>
         );
       })}
-    </div>
+
+      {/* Hub — shows active day count */}
+      <circle cx={cx} cy={cy} r={R_IN} fill="url(#ws-hub)" stroke="rgba(99,102,241,0.2)" strokeWidth="1" />
+      <text x={cx} y={cy - 4} textAnchor="middle" fontSize="15"
+        fill="#6366f1" fontWeight="800" fontVariantNumeric="tabular-nums">
+        {data[activeIdx] ?? 0}
+      </text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="8"
+        fill="currentColor" opacity="0.35" fontWeight="500">
+        {labels[activeIdx]}
+      </text>
+    </svg>
   );
 }
 
