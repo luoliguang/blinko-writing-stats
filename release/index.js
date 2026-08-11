@@ -1710,7 +1710,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
     name: "blinko-writing-stats",
     author: "giluoo",
     url: "https://github.com/luoliguang/blinko-writing-stats",
-    version: "0.1.0",
+    version: "0.2.0",
     minAppVersion: "0.0.0",
     displayName: {
       default: "Writing Stats",
