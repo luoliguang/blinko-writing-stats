@@ -37,6 +37,10 @@ function useCountUp(target: number, duration = 750) {
 }
 
 // ── Helpers ──────────────────────────────────────────────
+function localDate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function fmtNum(n: number) {
   if (n >= 10000) return (n / 10000).toFixed(1) + 'w';
   if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
@@ -46,7 +50,7 @@ function fmtNum(n: number) {
 function calcStreak(data: DayCount[]) {
   if (!data.length) return { cur: 0, longest: 0 };
   const set = new Set(data.map(d => d.date));
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+  const fmt = localDate;
   const today = new Date(); today.setHours(0, 0, 0, 0);
   let cur = 0;
   for (let i = 0; i <= 365; i++) {
@@ -369,7 +373,7 @@ function Heatmap({ data, unit, weekLabels, monthNames, selectedDay, onDayClick }
   while (start.getDay() !== 0) start.setDate(start.getDate() - 1);
   let week: { date: string; count: number }[] = [];
   for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
-    const ds = d.toISOString().slice(0, 10);
+    const ds = localDate(d);
     week.push({ date: ds, count: countMap[ds] || 0 });
     if (week.length === 7) { weeks.push(week); week = []; }
   }
