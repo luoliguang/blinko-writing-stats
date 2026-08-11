@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="README.md">English</a> | <a href="README_zh.md">中文</a>
+</div>
+
 # ✍️ Writing Stats — Blinko 插件
 
 > 追踪你的写作习惯，可视化你的坚持，发现笔记旅程中的规律。
