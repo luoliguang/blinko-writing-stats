@@ -102,8 +102,8 @@ function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[];
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
         <radialGradient id="ws-hub" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(99,102,241,0.18)" />
-          <stop offset="100%" stopColor="rgba(99,102,241,0.04)" />
+          <stop offset="0%" stopColor="rgba(245,158,11,0.18)" />
+          <stop offset="100%" stopColor="rgba(245,158,11,0.04)" />
         </radialGradient>
       </defs>
 
@@ -123,7 +123,7 @@ function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[];
         const x2 = cx + (v > 0 ? barR : R_IN + 5) * cos;
         const y2 = cy + (v > 0 ? barR : R_IN + 5) * sin;
         const lx = cx + R_LBL * cos, ly = cy + R_LBL * sin;
-        const color = (isPeak || isHov) ? '#6366f1' : '#818cf8';
+        const color = (isPeak || isHov) ? '#f59e0b' : '#fbbf24';
         const opac = v > 0
           ? (isPeak ? 1 : isHov ? 0.85 : 0.28 + 0.52 * (v / max))
           : 0.09;
@@ -140,7 +140,7 @@ function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[];
             {/* Glow halo for peak */}
             {isPeak && v > 0 && (
               <line x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke="#818cf8" strokeWidth={SW + 10} strokeLinecap="round"
+                stroke="#fbbf24" strokeWidth={SW + 10} strokeLinecap="round"
                 opacity="0.16" filter="url(#ws-pglow)" />
             )}
 
@@ -171,7 +171,7 @@ function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[];
             <text x={lx} y={ly + 4}
               textAnchor={anchor(cos)}
               fontSize={isPeak ? "11" : "10"}
-              fill={isPeak || isHov ? '#6366f1' : 'currentColor'}
+              fill={isPeak || isHov ? '#f59e0b' : 'currentColor'}
               fontWeight={isPeak ? "700" : "500"}
               opacity={isPeak ? 1 : isHov ? 0.7 : 0.42}>
               {labels[i]}
@@ -181,9 +181,9 @@ function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[];
       })}
 
       {/* Hub — shows active day count */}
-      <circle cx={cx} cy={cy} r={R_IN} fill="url(#ws-hub)" stroke="rgba(99,102,241,0.2)" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r={R_IN} fill="url(#ws-hub)" stroke="rgba(245,158,11,0.2)" strokeWidth="1" />
       <text x={cx} y={cy - 4} textAnchor="middle" fontSize="15"
-        fill="#6366f1" fontWeight="800" fontVariantNumeric="tabular-nums">
+        fill="#f59e0b" fontWeight="800" fontVariantNumeric="tabular-nums">
         {data[activeIdx] ?? 0}
       </text>
       <text x={cx} y={cy + 10} textAnchor="middle" fontSize="8"
@@ -260,14 +260,14 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
   return (
     <div style={{
       marginTop: '10px', borderRadius: '10px',
-      border: '1px solid rgba(99,102,241,0.2)',
-      background: 'rgba(99,102,241,0.05)',
+      border: '1px solid rgba(245,158,11,0.2)',
+      background: 'rgba(245,158,11,0.05)',
       overflow: 'hidden',
       animation: 'ws-up 0.2s ease both',
     }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid rgba(128,128,128,0.1)' }}>
-        <span style={{ fontSize: '12px', fontWeight: 700, color: '#6366f1' }}>{label}</span>
+        <span style={{ fontSize: '12px', fontWeight: 700, color: '#f59e0b' }}>{label}</span>
         <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.4, padding: '0 2px', display: 'flex', alignItems: 'center' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -301,11 +301,11 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
                   style={{
                     padding: '8px 12px', display: 'flex', gap: '8px', alignItems: 'center',
                     cursor: 'pointer',
-                    background: isExpanded ? 'rgba(99,102,241,0.06)' : 'transparent',
+                    background: isExpanded ? 'rgba(245,158,11,0.06)' : 'transparent',
                     transition: 'background 0.15s',
                   }}
                 >
-                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6366f1', flexShrink: 0, opacity: isExpanded ? 1 : 0.6 }} />
+                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#f59e0b', flexShrink: 0, opacity: isExpanded ? 1 : 0.6 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
                       fontSize: '12px', lineHeight: 1.5, opacity: 0.75,
@@ -333,8 +333,8 @@ function DayNotePanel({ date, notes, loading, onClose, monthNames }: {
                       onClick={(e) => { e.stopPropagation(); window.open(`/detail?id=${note.id}`, '_self'); }}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '4px',
-                        fontSize: '11px', color: '#6366f1', background: 'rgba(99,102,241,0.1)',
-                        border: '1px solid rgba(99,102,241,0.25)', borderRadius: '6px',
+                        fontSize: '11px', color: '#f59e0b', background: 'rgba(245,158,11,0.1)',
+                        border: '1px solid rgba(245,158,11,0.25)', borderRadius: '6px',
                         padding: '3px 8px', cursor: 'pointer', fontWeight: 600,
                         transition: 'background 0.15s',
                       }}
@@ -398,10 +398,10 @@ function Heatmap({ data, unit, weekLabels, monthNames, selectedDay, onDayClick }
   const getColor = (count: number) => {
     if (count === 0) return 'rgba(128,128,128,0.12)';
     const r = count / max;
-    if (r < 0.25) return 'rgba(99,102,241,0.3)';
-    if (r < 0.5) return 'rgba(99,102,241,0.52)';
-    if (r < 0.75) return 'rgba(99,102,241,0.72)';
-    return '#6366f1';
+    if (r < 0.25) return 'rgba(245,158,11,0.3)';
+    if (r < 0.5) return 'rgba(245,158,11,0.52)';
+    if (r < 0.75) return 'rgba(245,158,11,0.72)';
+    return '#f59e0b';
   };
 
   // Which day-rows to label: Mon=1, Wed=3, Fri=5
@@ -449,7 +449,7 @@ function Heatmap({ data, unit, weekLabels, monthNames, selectedDay, onDayClick }
                         width: `${CELL}px`, height: `${CELL}px`, borderRadius: '2px',
                         background: getColor(cell.count),
                         cursor: cell.count > 0 ? 'pointer' : 'default',
-                        outline: selectedDay === cell.date ? '2px solid #6366f1' : 'none',
+                        outline: selectedDay === cell.date ? '2px solid #f59e0b' : 'none',
                         outlineOffset: '1px',
                       }}
                     />
@@ -636,8 +636,8 @@ function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
     : 0;
 
   const chips: { icon: any; text: string; color: string }[] = [
-    { icon: <Activity size={12} />, text: `${t('mostActive')}: ${mostActiveDay}`, color: '#6366f1' },
-    { icon: <FileText size={12} />, text: `${t('avgNote')}: ${fmtNum(avgChars)} ${t('chars')}`, color: '#8b5cf6' },
+    { icon: <Activity size={12} />, text: `${t('mostActive')}: ${mostActiveDay}`, color: '#f59e0b' },
+    { icon: <FileText size={12} />, text: `${t('avgNote')}: ${fmtNum(avgChars)} ${t('chars')}`, color: '#f97316' },
     ...(delta !== null ? [{
       icon: delta >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />,
       text: `${t('thisMonth')}: ${delta >= 0 ? '+' : ''}${delta}%`,
@@ -767,8 +767,8 @@ export function App() {
     <button onClick={() => setTab(key)} style={{
       padding: '5px 14px', borderRadius: '8px', fontSize: '11px', fontWeight: 600,
       cursor: 'pointer', border: 'none', outline: 'none',
-      background: tab === key ? 'rgba(99,102,241,0.15)' : 'transparent',
-      color: tab === key ? '#6366f1' : 'inherit',
+      background: tab === key ? 'rgba(245,158,11,0.15)' : 'transparent',
+      color: tab === key ? '#f59e0b' : 'inherit',
       opacity: tab === key ? 1 : 0.4,
       transition: 'all 0.15s',
     }}>{label}</button>
@@ -784,10 +784,10 @@ export function App() {
         {/* Hero */}
         <div class="ws-in" style={{
           background: active
-            ? 'linear-gradient(145deg,#7c3aed,#4f46e5 60%,#2563eb)'
+            ? 'linear-gradient(145deg,#92400e,#d97706 60%,#f59e0b)'
             : 'linear-gradient(145deg,#374151,#1f2937)',
           borderRadius: '14px', padding: '16px 14px 14px',
-          color: 'white', boxShadow: active ? '0 6px 20px rgba(99,60,237,0.3)' : 'none',
+          color: 'white', boxShadow: active ? '0 6px 20px rgba(245,158,11,0.35)' : 'none',
           animationDelay: '0ms',
         }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
@@ -815,8 +815,8 @@ export function App() {
 
         {/* Stat cards 2×2 */}
         <div class="ws-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', animationDelay: '60ms' }}>
-          <StatCard raw={totalNotes} label={t('totalNotes')} icon={<PenLine size={15} />} accent="#3b82f6" />
-          <StatCard raw={totalChars} label={t('totalChars')} icon={<Type size={15} />} accent="#8b5cf6" />
+          <StatCard raw={totalNotes} label={t('totalNotes')} icon={<PenLine size={15} />} accent="#f59e0b" />
+          <StatCard raw={totalChars} label={t('totalChars')} icon={<Type size={15} />} accent="#f97316" />
           <StatCard raw={activeDays} label={t('activeDays')} icon={<CalendarDays size={15} />} accent="#22c55e" fmt={String} />
           <StatCard raw={streak.longest} label={t('bestStreak')} icon={<Flame size={15} />} accent="#f59e0b" fmt={String} />
         </div>
@@ -870,7 +870,7 @@ export function App() {
 
           {tab === 'trends' && (
             charTrends.length > 0
-              ? <LineChart data={charTrends} labels={monthLabels} color="#6366f1" unit={t('chars')} />
+              ? <LineChart data={charTrends} labels={monthLabels} color="#f97316" unit={t('chars')} />
               : <div style={{ opacity: 0.3, fontSize: '12px', textAlign: 'center', padding: '24px 0' }}>—</div>
           )}
         </div>

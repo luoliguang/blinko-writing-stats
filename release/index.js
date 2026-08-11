@@ -996,8 +996,8 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
           ] })
         ] }),
         /* @__PURE__ */ s("radialGradient", { id: "ws-hub", cx: "50%", cy: "50%", r: "50%", children: [
-          /* @__PURE__ */ s("stop", { offset: "0%", stopColor: "rgba(99,102,241,0.18)" }),
-          /* @__PURE__ */ s("stop", { offset: "100%", stopColor: "rgba(99,102,241,0.04)" })
+          /* @__PURE__ */ s("stop", { offset: "0%", stopColor: "rgba(245,158,11,0.18)" }),
+          /* @__PURE__ */ s("stop", { offset: "100%", stopColor: "rgba(245,158,11,0.04)" })
         ] })
       ] }),
       /* @__PURE__ */ s("circle", { cx: c, cy: d, r: l, fill: "none", stroke: "rgba(128,128,128,0.07)", strokeWidth: "1" }),
@@ -1014,7 +1014,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
         }
       ),
       t.map((h, b) => {
-        const T = b / S * Math.PI * 2 - Math.PI / 2, x = Math.cos(T), k = Math.sin(T), $ = b === a && h > 0, D = o === b, C = h > 0 ? m + h / i * (l - m) : 0, A = c + (m + 1) * x, N = d + (m + 1) * k, K = c + (h > 0 ? C : m + 5) * x, Q = d + (h > 0 ? C : m + 5) * k, tt = c + u * x, _t = d + u * k, q = $ || D ? "#6366f1" : "#818cf8", pt = h > 0 ? $ ? 1 : D ? 0.85 : 0.28 + 0.52 * (h / i) : 0.09;
+        const T = b / S * Math.PI * 2 - Math.PI / 2, x = Math.cos(T), k = Math.sin(T), $ = b === a && h > 0, D = o === b, C = h > 0 ? m + h / i * (l - m) : 0, A = c + (m + 1) * x, N = d + (m + 1) * k, K = c + (h > 0 ? C : m + 5) * x, Q = d + (h > 0 ? C : m + 5) * k, tt = c + u * x, _t = d + u * k, q = $ || D ? "#f59e0b" : "#fbbf24", pt = h > 0 ? $ ? 1 : D ? 0.85 : 0.28 + 0.52 * (h / i) : 0.09;
         return /* @__PURE__ */ s(
           "g",
           {
@@ -1041,7 +1041,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
                   y1: N,
                   x2: K,
                   y2: Q,
-                  stroke: "#818cf8",
+                  stroke: "#fbbf24",
                   strokeWidth: f + 10,
                   strokeLinecap: "round",
                   opacity: "0.16",
@@ -1092,7 +1092,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
                   y: _t + 4,
                   textAnchor: v(x),
                   fontSize: $ ? "11" : "10",
-                  fill: $ || D ? "#6366f1" : "currentColor",
+                  fill: $ || D ? "#f59e0b" : "currentColor",
                   fontWeight: $ ? "700" : "500",
                   opacity: $ ? 1 : D ? 0.7 : 0.42,
                   children: e[b]
@@ -1103,7 +1103,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
           b
         );
       }),
-      /* @__PURE__ */ s("circle", { cx: c, cy: d, r: m, fill: "url(#ws-hub)", stroke: "rgba(99,102,241,0.2)", strokeWidth: "1" }),
+      /* @__PURE__ */ s("circle", { cx: c, cy: d, r: m, fill: "url(#ws-hub)", stroke: "rgba(245,158,11,0.2)", strokeWidth: "1" }),
       /* @__PURE__ */ s(
         "text",
         {
@@ -1111,7 +1111,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
           y: d - 4,
           textAnchor: "middle",
           fontSize: "15",
-          fill: "#6366f1",
+          fill: "#f59e0b",
           fontWeight: "800",
           fontVariantNumeric: "tabular-nums",
           children: t[y] ?? 0
@@ -1187,13 +1187,13 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
     return /* @__PURE__ */ s("div", { style: {
       marginTop: "10px",
       borderRadius: "10px",
-      border: "1px solid rgba(99,102,241,0.2)",
-      background: "rgba(99,102,241,0.05)",
+      border: "1px solid rgba(245,158,11,0.2)",
+      background: "rgba(245,158,11,0.05)",
       overflow: "hidden",
       animation: "ws-up 0.2s ease both"
     }, children: [
       /* @__PURE__ */ s("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", borderBottom: "1px solid rgba(128,128,128,0.1)" }, children: [
-        /* @__PURE__ */ s("span", { style: { fontSize: "12px", fontWeight: 700, color: "#6366f1" }, children: p }),
+        /* @__PURE__ */ s("span", { style: { fontSize: "12px", fontWeight: 700, color: "#f59e0b" }, children: p }),
         /* @__PURE__ */ s("button", { onClick: o, style: { background: "none", border: "none", cursor: "pointer", opacity: 0.4, padding: "0 2px", display: "flex", alignItems: "center" }, children: /* @__PURE__ */ s("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", children: [
           /* @__PURE__ */ s("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
           /* @__PURE__ */ s("line", { x1: "6", y1: "6", x2: "18", y2: "18" })
@@ -1219,11 +1219,11 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
                     gap: "8px",
                     alignItems: "center",
                     cursor: "pointer",
-                    background: l ? "rgba(99,102,241,0.06)" : "transparent",
+                    background: l ? "rgba(245,158,11,0.06)" : "transparent",
                     transition: "background 0.15s"
                   },
                   children: [
-                    /* @__PURE__ */ s("div", { style: { width: "5px", height: "5px", borderRadius: "50%", background: "#6366f1", flexShrink: 0, opacity: l ? 1 : 0.6 } }),
+                    /* @__PURE__ */ s("div", { style: { width: "5px", height: "5px", borderRadius: "50%", background: "#f59e0b", flexShrink: 0, opacity: l ? 1 : 0.6 } }),
                     /* @__PURE__ */ s("div", { style: { flex: 1, minWidth: 0 }, children: /* @__PURE__ */ s("div", { style: {
                       fontSize: "12px",
                       lineHeight: 1.5,
@@ -1261,9 +1261,9 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
                       alignItems: "center",
                       gap: "4px",
                       fontSize: "11px",
-                      color: "#6366f1",
-                      background: "rgba(99,102,241,0.1)",
-                      border: "1px solid rgba(99,102,241,0.25)",
+                      color: "#f59e0b",
+                      background: "rgba(245,158,11,0.1)",
+                      border: "1px solid rgba(245,158,11,0.25)",
                       borderRadius: "6px",
                       padding: "3px 8px",
                       cursor: "pointer",
@@ -1318,7 +1318,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
       if (x === 0)
         return "rgba(128,128,128,0.12)";
       const k = x / p;
-      return k < 0.25 ? "rgba(99,102,241,0.3)" : k < 0.5 ? "rgba(99,102,241,0.52)" : k < 0.75 ? "rgba(99,102,241,0.72)" : "#6366f1";
+      return k < 0.25 ? "rgba(245,158,11,0.3)" : k < 0.5 ? "rgba(245,158,11,0.52)" : k < 0.75 ? "rgba(245,158,11,0.72)" : "#f59e0b";
     }, T = /* @__PURE__ */ new Set([1, 3, 5]);
     return /* @__PURE__ */ s("div", { children: [
       /* @__PURE__ */ s("style", { children: ".ws-hm::-webkit-scrollbar{display:none}" }),
@@ -1352,7 +1352,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
                 borderRadius: "2px",
                 background: b($.count),
                 cursor: $.count > 0 ? "pointer" : "default",
-                outline: r === $.date ? "2px solid #6366f1" : "none",
+                outline: r === $.date ? "2px solid #f59e0b" : "none",
                 outlineOffset: "1px"
               }
             },
@@ -1505,8 +1505,8 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
   }
   function vn({ weeklyData: t, weekLabels: e, monthData: n, totalNotes: o, t: r }) {
     const i = Math.max(...t), a = i > 0 ? e[t.indexOf(i)] ?? "—" : "—", p = n[n.length - 1], _ = n[n.length - 2], c = (p == null ? void 0 : p.totalWords) ?? 0, d = (_ == null ? void 0 : _.totalWords) ?? 0, m = d > 0 ? Math.round((c - d) / d * 100) : null, l = o > 0 ? Math.round(n.reduce((f, S) => f + S.totalWords, 0) / o) : 0, u = [
-      { icon: /* @__PURE__ */ s(Ke, { size: 12 }), text: `${r("mostActive")}: ${a}`, color: "#6366f1" },
-      { icon: /* @__PURE__ */ s(tn, { size: 12 }), text: `${r("avgNote")}: ${Tt(l)} ${r("chars")}`, color: "#8b5cf6" },
+      { icon: /* @__PURE__ */ s(Ke, { size: 12 }), text: `${r("mostActive")}: ${a}`, color: "#f59e0b" },
+      { icon: /* @__PURE__ */ s(tn, { size: 12 }), text: `${r("avgNote")}: ${Tt(l)} ${r("chars")}`, color: "#f97316" },
       ...m !== null ? [{
         icon: m >= 0 ? /* @__PURE__ */ s(rn, { size: 12 }) : /* @__PURE__ */ s(on, { size: 12 }),
         text: `${r("thisMonth")}: ${m >= 0 ? "+" : ""}${m}%`,
@@ -1604,8 +1604,8 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
       cursor: "pointer",
       border: "none",
       outline: "none",
-      background: f === w ? "rgba(99,102,241,0.15)" : "transparent",
-      color: f === w ? "#6366f1" : "inherit",
+      background: f === w ? "rgba(245,158,11,0.15)" : "transparent",
+      color: f === w ? "#f59e0b" : "inherit",
       opacity: f === w ? 1 : 0.4,
       transition: "all 0.15s"
     }, children: P });
@@ -1613,11 +1613,11 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
       /* @__PURE__ */ s("style", { children: "@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}" }),
       /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: "10px" }, children: [
         /* @__PURE__ */ s("div", { class: "ws-in", style: {
-          background: dt ? "linear-gradient(145deg,#7c3aed,#4f46e5 60%,#2563eb)" : "linear-gradient(145deg,#374151,#1f2937)",
+          background: dt ? "linear-gradient(145deg,#92400e,#d97706 60%,#f59e0b)" : "linear-gradient(145deg,#374151,#1f2937)",
           borderRadius: "14px",
           padding: "16px 14px 14px",
           color: "white",
-          boxShadow: dt ? "0 6px 20px rgba(99,60,237,0.3)" : "none",
+          boxShadow: dt ? "0 6px 20px rgba(245,158,11,0.35)" : "none",
           animationDelay: "0ms"
         }, children: [
           /* @__PURE__ */ s("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: "8px" }, children: /* @__PURE__ */ s("button", { onClick: () => $((w) => w === "zh" ? "en" : "zh"), style: {
@@ -1644,8 +1644,8 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
           ] })
         ] }),
         /* @__PURE__ */ s("div", { class: "ws-in", style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px", animationDelay: "60ms" }, children: [
-          /* @__PURE__ */ s(ct, { raw: _, label: C("totalNotes"), icon: /* @__PURE__ */ s(nn, { size: 15 }), accent: "#3b82f6" }),
-          /* @__PURE__ */ s(ct, { raw: Q, label: C("totalChars"), icon: /* @__PURE__ */ s(an, { size: 15 }), accent: "#8b5cf6" }),
+          /* @__PURE__ */ s(ct, { raw: _, label: C("totalNotes"), icon: /* @__PURE__ */ s(nn, { size: 15 }), accent: "#f59e0b" }),
+          /* @__PURE__ */ s(ct, { raw: Q, label: C("totalChars"), icon: /* @__PURE__ */ s(an, { size: 15 }), accent: "#f97316" }),
           /* @__PURE__ */ s(ct, { raw: d, label: C("activeDays"), icon: /* @__PURE__ */ s(Qe, { size: 15 }), accent: "#22c55e", fmt: String }),
           /* @__PURE__ */ s(ct, { raw: a.longest, label: C("bestStreak"), icon: /* @__PURE__ */ s(en, { size: 15 }), accent: "#f59e0b", fmt: String })
         ] })
@@ -1700,7 +1700,7 @@ var be = (H, g, B) => (Cn(H, typeof g != "symbol" ? g + "" : g, B), B);
           ] }),
           f === "weekly" && /* @__PURE__ */ s(pn, { data: l, labels: A, unit: C("notes") }),
           f === "tags" && /* @__PURE__ */ s(un, { tags: _t }),
-          f === "trends" && (q.length > 0 ? /* @__PURE__ */ s(xn, { data: q, labels: pt, color: "#6366f1", unit: C("chars") }) : /* @__PURE__ */ s("div", { style: { opacity: 0.3, fontSize: "12px", textAlign: "center", padding: "24px 0" }, children: "—" }))
+          f === "trends" && (q.length > 0 ? /* @__PURE__ */ s(xn, { data: q, labels: pt, color: "#f97316", unit: C("chars") }) : /* @__PURE__ */ s("div", { style: { opacity: 0.3, fontSize: "12px", textAlign: "center", padding: "24px 0" }, children: "—" }))
         ] }),
         /* @__PURE__ */ s("div", { style: { textAlign: "right", fontSize: "10px", opacity: 0.2 }, children: C("footer") })
       ] })
