@@ -78,6 +78,34 @@ function lastNMonths(n: number) {
   return months;
 }
 
+// Fetch raw notes (past year) so we can bucket by LOCAL date on the client.
+// The analytics endpoint groups by UTC date server-side, which shifts notes
+// written near midnight into the wrong day for non-UTC timezones.
+async function fetchYearNotes(token?: string): Promise<any[]> {
+  const all: any[] = [];
+  const size = 500;
+  const start = new Date();
+  start.setFullYear(start.getFullYear() - 1);
+  const startISO = start.toISOString();
+  for (let page = 1; page <= 50; page++) {
+    const res = await fetch('/api/v1/note/list', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      credentials: 'include',
+      body: JSON.stringify({ page, size, orderBy: 'desc', isArchived: null, startDate: startISO }),
+    });
+    if (!res.ok) break;
+    const batch = await res.json();
+    if (!Array.isArray(batch) || batch.length === 0) break;
+    all.push(...batch);
+    if (batch.length < size) break;
+  }
+  return all;
+}
+
 // ── VBar tooltip (relative positioning, works in dialogs) ─
 // ── Weekly chart — polar radial bars ─────────────────────
 function WeeklyChart({ data, labels, unit }: { data: number[]; labels: string[]; unit: string }) {
@@ -704,36 +732,51 @@ export function App() {
   const monthNames = t('months').split(',');
 
   useEffect(() => {
-    const api = window.Blinko.api.analytics as any;
-    const months = lastNMonths(6);
-    Promise.all([
-      api.dailyNoteCount.mutate(),
-      ...months.map((m: string) => api.monthlyStats.mutate({ month: m }).catch(() => null))
-    ]).then(([rawDaily, ...monthResults]: [DayCount[], ...(any[])]) => {
-      // API returns UTC dates; merge into local dates using noon-UTC as reference
-      // (noon UTC + timezone offset keeps the same local calendar date for UTC±11)
-      const dateMap: Record<string, number> = {};
-      (rawDaily as DayCount[]).forEach((d: DayCount) => {
-        const utc = d.date.slice(0, 10);
-        const local = localDate(new Date(utc + 'T12:00:00Z'));
-        dateMap[local] = (dateMap[local] || 0) + d.count;
-      });
-      const daily: DayCount[] = Object.entries(dateMap).map(([date, count]) => ({ date, count }));
+    (async () => {
+      try {
+        const token = (window.Blinko.store.userStore.userInfo as any)?.value?.token;
+        const notes = await fetchYearNotes(token);
 
-      setDailyData(daily);
-      setStreak(calcStreak(daily));
-      setTotalNotes(daily.reduce((s, d) => s + d.count, 0));
-      setActiveDays(daily.length);
-      const weekly = [0, 0, 0, 0, 0, 0, 0];
-      // d.date is now local date string; parse as local noon for correct day-of-week
-      daily.forEach(d => { weekly[new Date(d.date + 'T12:00:00').getDay()] += d.count; });
-      setWeeklyData(weekly);
-      const md: MonthData[] = monthResults
-        .map((r: any, i: number) => r ? ({ month: months[i]!.slice(5), totalWords: r.totalWords, tagStats: r.tagStats || [] }) : null)
-        .filter(Boolean) as MonthData[];
-      setMonthData(md);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+        // Bucket everything by LOCAL date so timezones line up with the calendar.
+        const dayMap: Record<string, number> = {};
+        const weekly = [0, 0, 0, 0, 0, 0, 0];
+        const monthWords: Record<string, number> = {};
+        const monthTags: Record<string, Record<string, number>> = {};
+
+        notes.forEach((n: any) => {
+          if (!n.createdAt) return;
+          const dt = new Date(n.createdAt);
+          const day = localDate(dt);            // local YYYY-MM-DD
+          dayMap[day] = (dayMap[day] || 0) + 1;
+          weekly[dt.getDay()]++;                // local day-of-week
+          const ym = day.slice(0, 7);
+          monthWords[ym] = (monthWords[ym] || 0) + (n.content ? n.content.length : 0);
+          (n.tags || []).forEach((tt: any) => {
+            const name = tt?.tag?.name;
+            if (!name) return;
+            monthTags[ym] = monthTags[ym] || {};
+            monthTags[ym][name] = (monthTags[ym][name] || 0) + 1;
+          });
+        });
+
+        const daily: DayCount[] = Object.entries(dayMap).map(([date, count]) => ({ date, count }));
+        setDailyData(daily);
+        setStreak(calcStreak(daily));
+        setTotalNotes(notes.length);
+        setActiveDays(daily.length);
+        setWeeklyData(weekly);
+
+        const md: MonthData[] = lastNMonths(6).map(ym => ({
+          month: ym.slice(5),
+          totalWords: monthWords[ym] || 0,
+          tagStats: Object.entries(monthTags[ym] || {}).map(([tagName, count]) => ({ tagName, count })),
+        }));
+        setMonthData(md);
+        setLoading(false);
+      } catch {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   const handleDayClick = async (date: string) => {
@@ -752,8 +795,10 @@ export function App() {
         credentials: 'include',
         body: JSON.stringify({
           page: 1, size: 20, orderBy: 'asc',
-          startDate: `${date}T00:00:00.000Z`,
-          endDate: `${date}T23:59:59.999Z`,
+          // `date` is a local calendar day; convert local start/end to UTC
+          // so the query window matches what the heatmap bucketed locally.
+          startDate: new Date(`${date}T00:00:00`).toISOString(),
+          endDate: new Date(`${date}T23:59:59.999`).toISOString(),
         }),
       });
       if (!res.ok) throw new Error(`${res.status}`);
