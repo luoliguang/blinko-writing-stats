@@ -709,13 +709,24 @@ export function App() {
     Promise.all([
       api.dailyNoteCount.mutate(),
       ...months.map((m: string) => api.monthlyStats.mutate({ month: m }).catch(() => null))
-    ]).then(([daily, ...monthResults]: [DayCount[], ...(any[])]) => {
+    ]).then(([rawDaily, ...monthResults]: [DayCount[], ...(any[])]) => {
+      // API returns UTC dates; merge into local dates using noon-UTC as reference
+      // (noon UTC + timezone offset keeps the same local calendar date for UTC±11)
+      const dateMap: Record<string, number> = {};
+      (rawDaily as DayCount[]).forEach((d: DayCount) => {
+        const utc = d.date.slice(0, 10);
+        const local = localDate(new Date(utc + 'T12:00:00Z'));
+        dateMap[local] = (dateMap[local] || 0) + d.count;
+      });
+      const daily: DayCount[] = Object.entries(dateMap).map(([date, count]) => ({ date, count }));
+
       setDailyData(daily);
       setStreak(calcStreak(daily));
-      setTotalNotes(daily.reduce((s: number, d: DayCount) => s + d.count, 0));
+      setTotalNotes(daily.reduce((s, d) => s + d.count, 0));
       setActiveDays(daily.length);
       const weekly = [0, 0, 0, 0, 0, 0, 0];
-      daily.forEach((d: DayCount) => { weekly[new Date(d.date + 'T12:00:00').getDay()] += d.count; });
+      // d.date is now local date string; parse as local noon for correct day-of-week
+      daily.forEach(d => { weekly[new Date(d.date + 'T12:00:00').getDay()] += d.count; });
       setWeeklyData(weekly);
       const md: MonthData[] = monthResults
         .map((r: any, i: number) => r ? ({ month: months[i]!.slice(5), totalWords: r.totalWords, tagStats: r.tagStats || [] }) : null)
