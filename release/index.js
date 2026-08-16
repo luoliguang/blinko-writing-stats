@@ -1702,7 +1702,7 @@ var We = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
           padding: "14px",
           background: "rgba(128,128,128,0.05)",
           border: "1px solid rgba(128,128,128,0.1)"
-        }, children: [
+        }, children: /* @__PURE__ */ s("div", { style: { animation: "ws-up 0.28s cubic-bezier(.4,0,.2,1) both" }, children: [
           f === "heatmap" && /* @__PURE__ */ s(B, { children: [
             /* @__PURE__ */ s(
               Sn,
@@ -1740,7 +1740,7 @@ var We = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
           f === "weekly" && /* @__PURE__ */ s(vn, { data: l, labels: A, unit: C("notes") }),
           f === "tags" && /* @__PURE__ */ s(kn, { tags: ft }),
           f === "trends" && (q.length > 0 ? /* @__PURE__ */ s(Tn, { data: q, labels: yt, color: "#f97316", unit: C("chars") }) : /* @__PURE__ */ s("div", { style: { opacity: 0.3, fontSize: "12px", textAlign: "center", padding: "24px 0" }, children: "—" }))
-        ] }),
+        ] }, f) }),
         /* @__PURE__ */ s("div", { style: { textAlign: "right", fontSize: "10px", opacity: 0.2 }, children: C("footer") })
       ] })
     ] });
@@ -1749,7 +1749,7 @@ var We = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     name: "blinko-writing-stats",
     author: "giluoo",
     url: "https://github.com/luoliguang/blinko-writing-stats",
-    version: "0.3.0",
+    version: "0.4.0",
     minAppVersion: "0.0.0",
     displayName: {
       default: "Writing Stats",

@@ -894,6 +894,7 @@ export function App() {
           flex: 1, borderRadius: '12px', padding: '14px',
           background: 'rgba(128,128,128,0.05)', border: '1px solid rgba(128,128,128,0.1)',
         }}>
+         <div key={tab} style={{ animation: 'ws-up 0.28s cubic-bezier(.4,0,.2,1) both' }}>
           {tab === 'heatmap' && (
             <>
               <Heatmap
@@ -929,6 +930,7 @@ export function App() {
               ? <LineChart data={charTrends} labels={monthLabels} color="#f97316" unit={t('chars')} />
               : <div style={{ opacity: 0.3, fontSize: '12px', textAlign: 'center', padding: '24px 0' }}>—</div>
           )}
+         </div>
         </div>
 
         <div style={{ textAlign: 'right', fontSize: '10px', opacity: 0.2 }}>{t('footer')}</div>
