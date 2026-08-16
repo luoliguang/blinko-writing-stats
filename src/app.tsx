@@ -832,7 +832,7 @@ export function App() {
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '16px', padding: '20px', minHeight: '280px', boxSizing: 'border-box' }}>
-      <style>{`@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}`}</style>
+      <style>{`@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}@keyframes ws-tab{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}.ws-tab{animation:ws-tab 0.32s cubic-bezier(.22,1,.36,1) both}`}</style>
 
       {/* ── Left column ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -893,8 +893,9 @@ export function App() {
         <div style={{
           flex: 1, borderRadius: '12px', padding: '14px',
           background: 'rgba(128,128,128,0.05)', border: '1px solid rgba(128,128,128,0.1)',
+          minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center',
         }}>
-         <div key={tab} style={{ animation: 'ws-up 0.28s cubic-bezier(.4,0,.2,1) both' }}>
+         <div key={tab} class="ws-tab">
           {tab === 'heatmap' && (
             <>
               <Heatmap
