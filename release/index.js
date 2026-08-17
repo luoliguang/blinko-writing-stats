@@ -1,8 +1,8 @@
 var Hn = Object.defineProperty;
 var Ln = (L, g, R) => g in L ? Hn(L, g, { enumerable: !0, configurable: !0, writable: !0, value: R }) : L[g] = R;
-var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
+var We = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
 (function() {
-  var L, g, R, I, Rt, It, Bt, vt, at, J, Ft, bt, kt, wt, Ut, st = {}, lt = [], We = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, Z = Array.isArray;
+  var L, g, R, I, Rt, It, Bt, vt, at, J, Ft, bt, kt, wt, Ut, st = {}, lt = [], Te = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, Z = Array.isArray;
   function E(t, e) {
     for (var n in e)
       t[n] = e[n];
@@ -107,7 +107,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     return -1;
   }
   function qt(t, e, n) {
-    e[0] == "-" ? t.setProperty(e, n ?? "") : t[e] = n == null ? "" : typeof n != "number" || We.test(e) ? n : n + "px";
+    e[0] == "-" ? t.setProperty(e, n ?? "") : t[e] = n == null ? "" : typeof n != "number" || Te.test(e) ? n : n + "px";
   }
   function dt(t, e, n, o, r) {
     var i, a;
@@ -150,7 +150,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     };
   }
   function Ct(t, e, n, o, r, i, a, d, _, c) {
-    var p, m, l, u, f, S, v, y, h, b, D, x, k, $, W, C, A = e.type;
+    var p, m, l, u, f, S, v, y, h, b, W, x, k, $, T, C, A = e.type;
     if (e.constructor !== void 0)
       return null;
     128 & n.__u && (_ = !!(32 & n.__u), i = [d = e.__e = n.__e]), (p = g.__b) && p(e);
@@ -158,7 +158,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       if (typeof A == "function") {
         m = a.length;
         try {
-          if (h = e.props, b = A.prototype && A.prototype.render, D = (p = A.contextType) && o[p.__c], x = p ? D ? D.props.value : p.__ : o, n.__c ? y = (l = e.__c = n.__c).__ = l.__E : (b ? e.__c = l = new A(h, x) : (e.__c = l = new O(h, x), l.constructor = A, l.render = He), D && D.sub(l), l.state || (l.state = {}), l.__n = o, u = l.__d = !0, l.__h = [], l._sb = []), b && l.__s == null && (l.__s = l.state), b && A.getDerivedStateFromProps != null && (l.__s == l.state && (l.__s = E({}, l.__s)), E(l.__s, A.getDerivedStateFromProps(h, l.__s))), f = l.props, S = l.state, l.__v = e, u)
+          if (h = e.props, b = A.prototype && A.prototype.render, W = (p = A.contextType) && o[p.__c], x = p ? W ? W.props.value : p.__ : o, n.__c ? y = (l = e.__c = n.__c).__ = l.__E : (b ? e.__c = l = new A(h, x) : (e.__c = l = new O(h, x), l.constructor = A, l.render = He), W && W.sub(l), l.state || (l.state = {}), l.__n = o, u = l.__d = !0, l.__h = [], l._sb = []), b && l.__s == null && (l.__s = l.state), b && A.getDerivedStateFromProps != null && (l.__s == l.state && (l.__s = E({}, l.__s)), E(l.__s, A.getDerivedStateFromProps(h, l.__s))), f = l.props, S = l.state, l.__v = e, u)
             b && A.getDerivedStateFromProps == null && l.componentWillMount != null && l.componentWillMount(), b && l.componentDidMount != null && l.__h.push(l.componentDidMount);
           else {
             if (b && A.getDerivedStateFromProps == null && h !== f && l.componentWillReceiveProps != null && l.componentWillReceiveProps(h, x), e.__v == n.__v || !l.__e && l.shouldComponentUpdate != null && l.shouldComponentUpdate(h, l.__s, x) === !1) {
@@ -177,7 +177,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
             do
               l.__d = !1, k && k(e), p = l.render(l.props, l.state, l.context), l.state = l.__s;
             while (l.__d && ++$ < 25);
-          l.state = l.__s, l.getChildContext != null && (o = E(E({}, o), l.getChildContext())), b && !u && l.getSnapshotBeforeUpdate != null && (v = l.getSnapshotBeforeUpdate(f, S)), W = p != null && p.type === B && p.key == null ? Xt(p.props.children) : p, d = Vt(t, Z(W) ? W : [W], e, n, o, r, i, a, d, _, c), l.base = e.__e, e.__u &= -161, l.__h.length && a.push(l), y && (l.__E = l.__ = null);
+          l.state = l.__s, l.getChildContext != null && (o = E(E({}, o), l.getChildContext())), b && !u && l.getSnapshotBeforeUpdate != null && (v = l.getSnapshotBeforeUpdate(f, S)), T = p != null && p.type === B && p.key == null ? Xt(p.props.children) : p, d = Vt(t, Z(T) ? T : [T], e, n, o, r, i, a, d, _, c), l.base = e.__e, e.__u &= -161, l.__h.length && a.push(l), y && (l.__E = l.__ = null);
         } catch (N) {
           if (a.length = m, e.__v = null, _ || i != null) {
             if (N.then) {
@@ -335,17 +335,17 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
         _[d] === void 0 && (_[d] = a[d]);
     return g.vnode && g.vnode(c), c;
   }
-  var K, M, Tt, Qt, Dt = 0, te = [], T = g, ee = T.__b, ne = T.__r, oe = T.diffed, re = T.__c, ie = T.unmount, ae = T.__;
-  function Wt(t, e) {
-    T.__h && T.__h(M, t, Dt || e), Dt = 0;
+  var K, M, Dt, Qt, Wt = 0, te = [], D = g, ee = D.__b, ne = D.__r, oe = D.diffed, re = D.__c, ie = D.unmount, ae = D.__;
+  function Tt(t, e) {
+    D.__h && D.__h(M, t, Wt || e), Wt = 0;
     var n = M.__H || (M.__H = { __: [], __h: [] });
     return t >= n.__.length && n.__.push({}), n.__[t];
   }
   function z(t) {
-    return Dt = 1, Re(ce, t);
+    return Wt = 1, Re(ce, t);
   }
   function Re(t, e, n) {
-    var o = Wt(K++, 2);
+    var o = Tt(K++, 2);
     if (o.t = t, !o.__c && (o.__ = [n ? n(e) : ce(void 0, e), function(d) {
       var _ = o.__N ? o.__N[0] : o.__[0], c = o.t(_, d);
       _ !== c && (o.__N = [c, o.__[1]], o.__c.setState({}));
@@ -379,11 +379,11 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     return o.__N || o.__;
   }
   function se(t, e) {
-    var n = Wt(K++, 3);
-    !T.__s && Ue(n.__H, e) && (n.__ = t, n.u = e, M.__H.__h.push(n));
+    var n = Tt(K++, 3);
+    !D.__s && Ue(n.__H, e) && (n.__ = t, n.u = e, M.__H.__h.push(n));
   }
   function Ie(t) {
-    var e = M.context[t.__c], n = Wt(K++, 9);
+    var e = M.context[t.__c], n = Tt(K++, 9);
     return n.c = t, e ? (n.__ == null && (n.__ = !0, e.sub(M)), e.props.value) : t.__;
   }
   function Be() {
@@ -393,27 +393,27 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
         try {
           e.__h.some(pt), e.__h.some(At), e.__h = [];
         } catch (n) {
-          e.__h = [], T.__e(n, t.__v);
+          e.__h = [], D.__e(n, t.__v);
         }
     }
   }
-  T.__b = function(t) {
+  D.__b = function(t) {
     M = null, ee && ee(t);
-  }, T.__ = function(t, e) {
+  }, D.__ = function(t, e) {
     t && e.__k && e.__k.__m && (t.__m = e.__k.__m), ae && ae(t, e);
-  }, T.__r = function(t) {
+  }, D.__r = function(t) {
     ne && ne(t), K = 0;
     var e = (M = t.__c).__H;
-    e && (Tt === M ? (e.__h = [], M.__h = [], e.__.some(function(n) {
+    e && (Dt === M ? (e.__h = [], M.__h = [], e.__.some(function(n) {
       n.__N && (n.__ = n.__N), n.u = n.__N = void 0;
-    })) : (e.__h.some(pt), e.__h.some(At), e.__h = [], K = 0)), Tt = M;
-  }, T.diffed = function(t) {
+    })) : (e.__h.some(pt), e.__h.some(At), e.__h = [], K = 0)), Dt = M;
+  }, D.diffed = function(t) {
     oe && oe(t);
     var e = t.__c;
-    e && e.__H && (e.__H.__h.length && (te.push(e) !== 1 && Qt === T.requestAnimationFrame || ((Qt = T.requestAnimationFrame) || Fe)(Be)), e.__H.__.some(function(n) {
+    e && e.__H && (e.__H.__h.length && (te.push(e) !== 1 && Qt === D.requestAnimationFrame || ((Qt = D.requestAnimationFrame) || Fe)(Be)), e.__H.__.some(function(n) {
       n.u && (n.__H = n.u, n.u = void 0);
-    })), Tt = M = null;
-  }, T.__c = function(t, e) {
+    })), Dt = M = null;
+  }, D.__c = function(t, e) {
     e.some(function(n) {
       try {
         n.__h.some(pt), n.__h = n.__h.filter(function(o) {
@@ -422,10 +422,10 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       } catch (o) {
         e.some(function(r) {
           r.__h && (r.__h = []);
-        }), e = [], T.__e(o, n.__v);
+        }), e = [], D.__e(o, n.__v);
       }
     }), re && re(t, e);
-  }, T.unmount = function(t) {
+  }, D.unmount = function(t) {
     ie && ie(t);
     var e, n = t.__c;
     n && n.__H && (n.__H.__.some(function(o) {
@@ -434,7 +434,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       } catch (r) {
         e = r;
       }
-    }), n.__H = void 0, e && T.__e(e, n.__v));
+    }), n.__H = void 0, e && D.__e(e, n.__v));
   };
   var le = typeof requestAnimationFrame == "function";
   function Fe(t) {
@@ -1007,7 +1007,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
   function vn({ data: t, labels: e, unit: n }) {
     const [o, r] = z(null), i = Math.max(...t, 1);
     t.reduce((h, b) => h + b, 0);
-    const a = t.reduce((h, b, D) => b > t[h] ? D : h, 0), d = 320, _ = 210, c = d / 2, p = _ / 2 + 2, m = 30, l = 78, u = l + 22, f = 14, S = 7, v = (h) => h > 0.3 ? "start" : h < -0.3 ? "end" : "middle", y = o !== null ? o : a;
+    const a = t.reduce((h, b, W) => b > t[h] ? W : h, 0), d = 320, _ = 210, c = d / 2, p = _ / 2 + 2, m = 30, l = 78, u = l + 22, f = 14, S = 7, v = (h) => h > 0.3 ? "start" : h < -0.3 ? "end" : "middle", y = o !== null ? o : a;
     return /* @__PURE__ */ s("svg", { viewBox: `0 0 ${d} ${_}`, style: { width: "100%", height: "auto", display: "block", overflow: "visible" }, children: [
       /* @__PURE__ */ s("defs", { children: [
         /* @__PURE__ */ s("filter", { id: "ws-pglow", x: "-120%", y: "-120%", width: "340%", height: "340%", children: [
@@ -1036,7 +1036,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
         }
       ),
       t.map((h, b) => {
-        const D = b / S * Math.PI * 2 - Math.PI / 2, x = Math.cos(D), k = Math.sin(D), $ = b === a && h > 0, W = o === b, C = h > 0 ? m + h / i * (l - m) : 0, A = c + (m + 1) * x, N = p + (m + 1) * k, Q = c + (h > 0 ? C : m + 5) * x, tt = p + (h > 0 ? C : m + 5) * k, et = c + u * x, ft = p + u * k, Y = $ || W ? "#f59e0b" : "#fbbf24", yt = h > 0 ? $ ? 1 : W ? 0.85 : 0.28 + 0.52 * (h / i) : 0.09;
+        const W = b / S * Math.PI * 2 - Math.PI / 2, x = Math.cos(W), k = Math.sin(W), $ = b === a && h > 0, T = o === b, C = h > 0 ? m + h / i * (l - m) : 0, A = c + (m + 1) * x, N = p + (m + 1) * k, Q = c + (h > 0 ? C : m + 5) * x, tt = p + (h > 0 ? C : m + 5) * k, et = c + u * x, ft = p + u * k, Y = $ || T ? "#f59e0b" : "#fbbf24", yt = h > 0 ? $ ? 1 : T ? 0.85 : 0.28 + 0.52 * (h / i) : 0.09;
         return /* @__PURE__ */ s(
           "g",
           {
@@ -1088,13 +1088,13 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
                 {
                   cx: Q,
                   cy: tt,
-                  r: $ ? 4.5 : W ? 3.5 : 3,
+                  r: $ ? 4.5 : T ? 3.5 : 3,
                   fill: Y,
                   opacity: $ ? 1 : yt,
                   style: { transition: "r 0.12s" }
                 }
               ),
-              ($ || W) && h > 0 && /* @__PURE__ */ s(
+              ($ || T) && h > 0 && /* @__PURE__ */ s(
                 "text",
                 {
                   x: c + (C + 14) * x,
@@ -1114,9 +1114,9 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
                   y: ft + 4,
                   textAnchor: v(x),
                   fontSize: $ ? "11" : "10",
-                  fill: $ || W ? "#f59e0b" : "currentColor",
+                  fill: $ || T ? "#f59e0b" : "currentColor",
                   fontWeight: $ ? "700" : "500",
-                  opacity: $ ? 1 : W ? 0.7 : 0.42,
+                  opacity: $ ? 1 : T ? 0.7 : 0.42,
                   children: e[b]
                 }
               )
@@ -1329,10 +1329,10 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     let S = "";
     p.forEach((x, k) => {
       x.forEach(($) => {
-        const W = $.date.slice(0, 7);
-        if (W !== S) {
+        const T = $.date.slice(0, 7);
+        if (T !== S) {
           const C = parseInt($.date.slice(5, 7)) - 1;
-          f.push({ label: o[C] ?? "", col: k }), S = W;
+          f.push({ label: o[C] ?? "", col: k }), S = T;
         }
       });
     });
@@ -1341,7 +1341,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
         return "rgba(128,128,128,0.12)";
       const k = x / d;
       return k < 0.25 ? "rgba(245,158,11,0.3)" : k < 0.5 ? "rgba(245,158,11,0.52)" : k < 0.75 ? "rgba(245,158,11,0.72)" : "#f59e0b";
-    }, D = /* @__PURE__ */ new Set([1, 3, 5]);
+    }, W = /* @__PURE__ */ new Set([1, 3, 5]);
     return /* @__PURE__ */ s("div", { children: [
       /* @__PURE__ */ s("style", { children: ".ws-hm::-webkit-scrollbar{display:none}" }),
       /* @__PURE__ */ s("div", { class: "ws-hm", style: { overflowX: "auto", scrollbarWidth: "none" }, children: /* @__PURE__ */ s("div", { style: { display: "inline-flex", gap: "0", flexDirection: "column", minWidth: "max-content" }, children: [
@@ -1358,11 +1358,11 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
             height: `${v}px`,
             lineHeight: `${v}px`,
             fontSize: "9px",
-            opacity: D.has(k) ? 0.4 : 0,
+            opacity: W.has(k) ? 0.4 : 0,
             textAlign: "right",
             fontWeight: 500
           }, children: x.slice(0, 3) }, k)) }),
-          /* @__PURE__ */ s("div", { style: { display: "flex", gap: `${y}px` }, children: p.map((x, k) => /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: `${y}px` }, children: x.map(($, W) => /* @__PURE__ */ s(
+          /* @__PURE__ */ s("div", { style: { display: "flex", gap: `${y}px` }, children: p.map((x, k) => /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: `${y}px` }, children: x.map(($, T) => /* @__PURE__ */ s(
             "div",
             {
               onMouseEnter: () => c($.count > 0 ? `${$.date} · ${$.count} ${e}` : $.date),
@@ -1378,7 +1378,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
                 outlineOffset: "1px"
               }
             },
-            W
+            T
           )) }, k)) })
         ] })
       ] }) }),
@@ -1422,7 +1422,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     }
     return e;
   }
-  function Tn({ data: t, labels: e, color: n, unit: o }) {
+  function Dn({ data: t, labels: e, color: n, unit: o }) {
     const [r, i] = z(null);
     if (!t.length)
       return null;
@@ -1451,7 +1451,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       v && /* @__PURE__ */ s("path", { d: v, fill: "url(#ws-lg)" }),
       /* @__PURE__ */ s("path", { d: S, fill: "none", stroke: n, strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }),
       f.map((y, h) => {
-        const b = r === h, D = 64, x = 20, k = Math.min(Math.max(y.x - D / 2, _.left), a - _.right - D);
+        const b = r === h, W = 64, x = 20, k = Math.min(Math.max(y.x - W / 2, _.left), a - _.right - W);
         return /* @__PURE__ */ s("g", { children: [
           /* @__PURE__ */ s("text", { x: y.x, y: d - 6, textAnchor: "middle", fontSize: "9.5", fill: "currentColor", opacity: "0.38", fontWeight: "500", children: e[h] }),
           /* @__PURE__ */ s(
@@ -1498,7 +1498,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
               {
                 x: k,
                 y: y.y - 28,
-                width: D,
+                width: W,
                 height: x,
                 rx: "6",
                 fill: "rgba(10,10,20,0.82)"
@@ -1507,7 +1507,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
             /* @__PURE__ */ s(
               "text",
               {
-                x: k + D / 2,
+                x: k + W / 2,
                 y: y.y - 14,
                 textAnchor: "middle",
                 fontSize: "10.5",
@@ -1525,7 +1525,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       })
     ] });
   }
-  function Dn({ weeklyData: t, weekLabels: e, monthData: n, totalNotes: o, t: r }) {
+  function Wn({ weeklyData: t, weekLabels: e, monthData: n, totalNotes: o, t: r }) {
     const i = Math.max(...t), a = i > 0 ? e[t.indexOf(i)] ?? "—" : "—", d = n[n.length - 1], _ = n[n.length - 2], c = (d == null ? void 0 : d.totalWords) ?? 0, p = (_ == null ? void 0 : _.totalWords) ?? 0, m = p > 0 ? Math.round((c - p) / p * 100) : null, l = o > 0 ? Math.round(n.reduce((f, S) => f + S.totalWords, 0) / o) : 0, u = [
       { icon: /* @__PURE__ */ s(sn, { size: 12 }), text: `${r("mostActive")}: ${a}`, color: "#f59e0b" },
       { icon: /* @__PURE__ */ s(cn, { size: 12 }), text: `${r("avgNote")}: ${Pt(l)} ${r("chars")}`, color: "#f97316" },
@@ -1551,18 +1551,18 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       /* @__PURE__ */ s("span", { style: { color: "inherit", opacity: 0.85 }, children: f.text })
     ] }, S)) });
   }
-  function Wn() {
-    return /* @__PURE__ */ s("div", { style: { padding: "20px", display: "grid", gridTemplateColumns: "200px 1fr", gap: "16px" }, children: [
-      /* @__PURE__ */ s("style", { children: "@keyframes ws-pulse{0%,100%{opacity:.3}50%{opacity:.65}}" }),
+  function Tn() {
+    return /* @__PURE__ */ s("div", { class: "ws-grid", children: [
+      /* @__PURE__ */ s("style", { children: "@keyframes ws-pulse{0%,100%{opacity:.3}50%{opacity:.65}}.ws-grid{padding:20px;display:grid;grid-template-columns:200px 1fr;gap:16px;box-sizing:border-box}@media(max-width:560px){.ws-grid{grid-template-columns:1fr;padding:14px}}" }),
       /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: "10px" }, children: [110, 60, 60].map((t, e) => /* @__PURE__ */ s("div", { style: { height: `${t}px`, borderRadius: "12px", background: "rgba(128,128,128,0.1)", animation: `ws-pulse 1.4s ease-in-out ${e * 0.12}s infinite` } }, e)) }),
       /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: "10px" }, children: [36, 200].map((t, e) => /* @__PURE__ */ s("div", { style: { height: `${t}px`, borderRadius: "12px", background: "rgba(128,128,128,0.1)", animation: `ws-pulse 1.4s ease-in-out ${e * 0.15}s infinite` } }, e)) })
     ] });
   }
   function An() {
     var Ce, Me;
-    const [t, e] = z(!0), [n, o] = z([]), [r, i] = z([]), [a, d] = z({ cur: 0, longest: 0 }), [_, c] = z(0), [p, m] = z(0), [l, u] = z([0, 0, 0, 0, 0, 0, 0]), [f, S] = z("heatmap"), [v, y] = z(null), [h, b] = z([]), [D, x] = z(!1), [k, $] = z(
+    const [t, e] = z(!0), [n, o] = z([]), [r, i] = z([]), [a, d] = z({ cur: 0, longest: 0 }), [_, c] = z(0), [p, m] = z(0), [l, u] = z([0, 0, 0, 0, 0, 0, 0]), [f, S] = z("heatmap"), [v, y] = z(null), [h, b] = z([]), [W, x] = z(!1), [k, $] = z(
       (Ce = window.Blinko.i18n.language) != null && Ce.startsWith("zh") ? "zh" : "en"
-    ), W = k === "zh" ? yn : fn, C = (w) => W[w], A = C("weeks").split(","), N = C("months").split(",");
+    ), T = k === "zh" ? yn : fn, C = (w) => T[w], A = C("weeks").split(","), N = C("months").split(",");
     se(() => {
       (async () => {
         var w, P;
@@ -1575,8 +1575,8 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
             j[it] = (j[it] || 0) + 1, ot[q.getDay()]++;
             const G = it.slice(0, 7);
             Ht[G] = (Ht[G] || 0) + (H.content ? H.content.length : 0), (H.tags || []).forEach((Et) => {
-              var Te;
-              const Ot = (Te = Et == null ? void 0 : Et.tag) == null ? void 0 : Te.name;
+              var De;
+              const Ot = (De = Et == null ? void 0 : Et.tag) == null ? void 0 : De.name;
               Ot && (rt[G] = rt[G] || {}, rt[G][Ot] = (rt[G][Ot] || 0) + 1);
             });
           });
@@ -1628,7 +1628,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       x(!1);
     };
     if (t)
-      return /* @__PURE__ */ s(Wn, {});
+      return /* @__PURE__ */ s(Tn, {});
     const tt = r.reduce((w, P) => w + P.totalWords, 0), et = {};
     r.flatMap((w) => w.tagStats).forEach((w) => {
       w.tagName !== "Others" && (et[w.tagName] = (et[w.tagName] || 0) + w.count);
@@ -1648,8 +1648,8 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
       opacity: f === w ? 1 : 0.4,
       transition: "all 0.15s"
     }, children: P });
-    return /* @__PURE__ */ s("div", { style: { display: "grid", gridTemplateColumns: "200px 1fr", gap: "16px", padding: "20px", minHeight: "280px", boxSizing: "border-box" }, children: [
-      /* @__PURE__ */ s("style", { children: "@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}@keyframes ws-tab{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}.ws-tab{animation:ws-tab 0.32s cubic-bezier(.22,1,.36,1) both}" }),
+    return /* @__PURE__ */ s("div", { class: "ws-grid", style: { minHeight: "280px" }, children: [
+      /* @__PURE__ */ s("style", { children: "@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}@keyframes ws-tab{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}.ws-tab{animation:ws-tab 0.32s cubic-bezier(.22,1,.36,1) both}.ws-grid{display:grid;grid-template-columns:200px 1fr;gap:16px;padding:20px;box-sizing:border-box}@media(max-width:560px){.ws-grid{grid-template-columns:1fr;padding:14px}}" }),
       /* @__PURE__ */ s("div", { style: { display: "flex", flexDirection: "column", gap: "10px" }, children: [
         /* @__PURE__ */ s("div", { class: "ws-in", style: {
           background: gt ? "linear-gradient(145deg,#92400e,#d97706 60%,#f59e0b)" : "linear-gradient(145deg,#374151,#1f2937)",
@@ -1724,14 +1724,14 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
               {
                 date: v,
                 notes: h,
-                loading: D,
+                loading: W,
                 monthNames: N,
                 onClose: () => {
                   y(null), b([]);
                 }
               }
             ) : /* @__PURE__ */ s(
-              Dn,
+              Wn,
               {
                 weeklyData: l,
                 weekLabels: A,
@@ -1743,7 +1743,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
           ] }),
           f === "weekly" && /* @__PURE__ */ s(vn, { data: l, labels: A, unit: C("notes") }),
           f === "tags" && /* @__PURE__ */ s(kn, { tags: ft }),
-          f === "trends" && (Y.length > 0 ? /* @__PURE__ */ s(Tn, { data: Y, labels: yt, color: "#f97316", unit: C("chars") }) : /* @__PURE__ */ s("div", { style: { opacity: 0.3, fontSize: "12px", textAlign: "center", padding: "24px 0" }, children: "—" }))
+          f === "trends" && (Y.length > 0 ? /* @__PURE__ */ s(Dn, { data: Y, labels: yt, color: "#f97316", unit: C("chars") }) : /* @__PURE__ */ s("div", { style: { opacity: 0.3, fontSize: "12px", textAlign: "center", padding: "24px 0" }, children: "—" }))
         ] }, f) }),
         /* @__PURE__ */ s("div", { style: { textAlign: "right", fontSize: "10px", opacity: 0.2 }, children: C("footer") })
       ] })
@@ -1753,7 +1753,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     name: "blinko-writing-stats",
     author: "giluoo",
     url: "https://github.com/luoliguang/blinko-writing-stats",
-    version: "0.4.0",
+    version: "0.5.0",
     minAppVersion: "0.0.0",
     displayName: {
       default: "Writing Stats",
@@ -1772,7 +1772,7 @@ var De = (L, g, R) => (Ln(L, typeof g != "symbol" ? g + "" : g, R), R);
     execute: () => {
       t("default", class {
         constructor() {
-          De(this, "withSettingPanel", !1);
+          We(this, "withSettingPanel", !1);
           Object.assign(this, zn);
         }
         async init() {

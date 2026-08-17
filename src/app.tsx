@@ -693,8 +693,8 @@ function InsightsRow({ weeklyData, weekLabels, monthData, totalNotes, t }: {
 // ── Skeleton ──────────────────────────────────────────────
 function Skeleton() {
   return (
-    <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: '200px 1fr', gap: '16px' }}>
-      <style>{`@keyframes ws-pulse{0%,100%{opacity:.3}50%{opacity:.65}}`}</style>
+    <div class="ws-grid">
+      <style>{`@keyframes ws-pulse{0%,100%{opacity:.3}50%{opacity:.65}}.ws-grid{padding:20px;display:grid;grid-template-columns:200px 1fr;gap:16px;box-sizing:border-box}@media(max-width:560px){.ws-grid{grid-template-columns:1fr;padding:14px}}`}</style>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {[110, 60, 60].map((h, i) => (
           <div key={i} style={{ height: `${h}px`, borderRadius: '12px', background: 'rgba(128,128,128,0.1)', animation: `ws-pulse 1.4s ease-in-out ${i * 0.12}s infinite` }} />
@@ -831,8 +831,8 @@ export function App() {
   );
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '16px', padding: '20px', minHeight: '280px', boxSizing: 'border-box' }}>
-      <style>{`@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}@keyframes ws-tab{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}.ws-tab{animation:ws-tab 0.32s cubic-bezier(.22,1,.36,1) both}`}</style>
+    <div class="ws-grid" style={{ minHeight: '280px' }}>
+      <style>{`@keyframes ws-up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ws-in{animation:ws-up 0.28s ease both}@keyframes ws-tab{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}.ws-tab{animation:ws-tab 0.32s cubic-bezier(.22,1,.36,1) both}.ws-grid{display:grid;grid-template-columns:200px 1fr;gap:16px;padding:20px;box-sizing:border-box}@media(max-width:560px){.ws-grid{grid-template-columns:1fr;padding:14px}}`}</style>
 
       {/* ── Left column ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
