@@ -735,7 +735,14 @@ export function App() {
     (async () => {
       try {
         const token = (window.Blinko.store.userStore.userInfo as any)?.value?.token;
-        const notes = await fetchYearNotes(token);
+        const myId = (window.Blinko.store.userStore.userInfo as any)?.value?.id;
+        const allNotes = await fetchYearNotes(token);
+        // Only count notes the current user actually wrote. note.list also
+        // returns notes shared TO the user by others — those must not be
+        // counted as the user's own writing.
+        const notes = (myId != null && myId !== '')
+          ? allNotes.filter((n: any) => String(n.accountId) === String(myId))
+          : allNotes;
 
         // Bucket everything by LOCAL date so timezones line up with the calendar.
         const dayMap: Record<string, number> = {};
@@ -803,7 +810,12 @@ export function App() {
       });
       if (!res.ok) throw new Error(`${res.status}`);
       const notes = await res.json();
-      setDayNotes(Array.isArray(notes) ? notes : []);
+      const myId = (window.Blinko.store.userStore.userInfo as any)?.value?.id;
+      // Exclude notes shared TO the user — only show what they wrote
+      const own = (Array.isArray(notes) && myId != null && myId !== '')
+        ? notes.filter((n: any) => String(n.accountId) === String(myId))
+        : (Array.isArray(notes) ? notes : []);
+      setDayNotes(own);
     } catch { setDayNotes([]); }
     setLoadingDay(false);
   };
